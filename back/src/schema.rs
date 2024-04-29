@@ -8,5 +8,7 @@ diesel::table! {
         username -> Varchar,
         #[max_length = 255]
         email -> Varchar,
+        #[max_length = 64]
+        password -> Bpchar,
     }
 }
