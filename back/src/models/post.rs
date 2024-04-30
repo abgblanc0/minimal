@@ -10,7 +10,14 @@ pub struct NewPost<'a> {
     pub body: &'a str,
 }
 
-#[derive(Queryable, Debug, Serialize, Identifiable, Deserialize, AsChangeset)]
+#[derive(AsChangeset, Deserialize)]
+#[diesel(table_name = posts)]
+pub struct UpdatePost<'a> {
+    pub title: Option<&'a str>,
+    pub body: Option<&'a str>,
+}
+
+#[derive(Queryable, Debug, Serialize, Identifiable, Deserialize)]
 #[diesel(table_name = posts)]
 pub struct Post {
     pub id: i32,

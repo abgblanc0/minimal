@@ -26,7 +26,9 @@ fn rocket() -> _ {
         "/posts", 
         routes![
             routes::post::posts,
-            routes::post::posts_by_user_id
+            routes::post::posts_by_user_id,
+            routes::post::delete_post,
+            routes::post::patch_post,
         ],
     )
 }
