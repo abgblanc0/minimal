@@ -1,4 +1,4 @@
-use diesel::{dsl, ExpressionMethods, PgConnection, QueryDsl, RunQueryDsl};
+use diesel::{ExpressionMethods, PgConnection, QueryDsl, RunQueryDsl};
 
 use crate::models::post::*;
 use crate::schema::posts::dsl::*;
@@ -16,5 +16,16 @@ pub fn get_posts_by_user_id(conn: &mut PgConnection, other: i32) -> MyResult<Vec
 pub fn create_post(conn: &mut PgConnection, new_post: NewPost) -> MyResult<Post>{
     diesel::insert_into(posts)
             .values(&new_post)
+            .get_result(conn)
+}
+
+pub fn erase_post(conn: &mut PgConnection, other: i32) -> MyResult<usize> {
+    diesel::delete(posts.find(other))
+            .execute(conn)
+}
+
+pub fn update_post(conn: &mut PgConnection, post: UpdatePost ,other: i32) -> MyResult<Post> {
+    diesel::update(posts.find(other))
+            .set(post)
             .get_result(conn)
 }
