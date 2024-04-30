@@ -35,7 +35,6 @@ pub fn post_user(pool: &State<PgPool>, input: Json<NewUser>) -> Result<Json<User
     }
 }
 
-// TO DO : FIX THIS
 #[patch("/<user_id>", data = "<input>")]
 pub fn patch_user(pool: &State<PgPool>, input: Json<UpdateUser>, user_id: i32) -> Result<Json<User>, MyError> {
     let mut conn = pool.get().expect("Error conn");

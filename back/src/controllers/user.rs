@@ -1,10 +1,8 @@
 use crate::models::user::*;
 use crate::schema::users::dsl::*;
-use diesel::{self, ExpressionMethods};
-use diesel::pg::{Pg, PgConnection};
+use diesel;
+use diesel::pg::PgConnection;
 use diesel::{QueryDsl, RunQueryDsl};
-use rocket::http::hyper::server::conn;
-use rocket::serde::json::Json;
 
 type MyResult<T> = Result<T, diesel::result::Error>;
 
@@ -30,13 +28,12 @@ pub fn create_users(conn: &mut PgConnection, new_users: Vec<NewUser>) -> MyResul
 }
 
 pub fn update_user(conn: &mut PgConnection, user: UpdateUser, user_id:i32) -> MyResult<User>{
-    print!("{:?}", user);
     diesel::update(users.find(user_id))
             .set(user)
             .get_result(conn)
 }
 
 pub fn erase_user(conn: &mut PgConnection, user_id: i32) -> MyResult<usize>{
-    diesel::delete(users.filter(id.eq(user_id)))
+    diesel::delete(users.find(user_id))
             .execute(conn)
-}
+}       
