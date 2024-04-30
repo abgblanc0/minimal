@@ -1,6 +1,17 @@
 // @generated automatically by Diesel CLI.
 
 diesel::table! {
+    posts (id) {
+        id -> Int4,
+        ctime -> Nullable<Timestamptz>,
+        #[max_length = 255]
+        title -> Varchar,
+        body -> Text,
+        user_id -> Int4,
+    }
+}
+
+diesel::table! {
     users (id) {
         id -> Int4,
         ctime -> Nullable<Timestamptz>,
@@ -12,3 +23,10 @@ diesel::table! {
         password -> Bpchar,
     }
 }
+
+diesel::joinable!(posts -> users (user_id));
+
+diesel::allow_tables_to_appear_in_same_query!(
+    posts,
+    users,
+);
