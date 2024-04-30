@@ -5,7 +5,7 @@ CREATE TABLE posts (
     ctime timestamp with time zone DEFAULT now(),
     title VARCHAR(255) NOT NULL,
     body TEXT NOT NULL,
-    user_id INT REFERENCES users(id) NOT NULL
+    user_id INT REFERENCES users(id) ON DELETE CASCADE NOT NULL
 );
 
 
