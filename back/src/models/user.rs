@@ -10,7 +10,15 @@ pub struct NewUser<'a> {
     pub password: &'a str,
 }
 
-#[derive(Queryable, Debug, Serialize, Identifiable, Deserialize, AsChangeset)]
+#[derive(AsChangeset, Deserialize, Debug)]
+#[diesel(table_name = users)]
+pub struct UpdateUser<'a> {
+    pub username: Option<&'a str>,
+    pub email: Option<&'a str>,
+    pub password: Option<&'a str>,
+}
+
+#[derive(Queryable, Debug, Serialize, Identifiable, Deserialize)]
 #[diesel(table_name = users)]
 pub struct User {
     pub id: i32,
