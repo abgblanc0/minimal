@@ -46,10 +46,10 @@ pub fn patch_user(pool: &State<PgPool>, input: Json<UpdateUser>, user_id: i32) -
 }
 
 #[delete("/<user_id>")]
-pub fn delete_user(pool: &State<PgPool>, user_id: i32) -> Result<String, MyError> {
+pub fn delete_user(pool: &State<PgPool>, user_id: i32) -> Result<&str, MyError> {
     let mut conn = pool.get().expect("Error conn");
     match erase_user(&mut conn, user_id) {
-        Ok(result) => Ok(format!("{} rows deleted", result)),
+        Ok(result) => Ok("User deleted"),
         Err(error) => Err(MyError::build(400, Some(error.to_string())))
     }
 }
