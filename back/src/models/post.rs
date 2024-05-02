@@ -8,6 +8,7 @@ pub struct NewPost<'a> {
     pub user_id: i32,
     pub title: &'a str,
     pub body: &'a str,
+    pub topic: Option<&'a str>,
 }
 
 #[derive(AsChangeset, Deserialize)]
@@ -15,6 +16,7 @@ pub struct NewPost<'a> {
 pub struct UpdatePost<'a> {
     pub title: Option<&'a str>,
     pub body: Option<&'a str>,
+    pub topic: Option<&'a str>,
 }
 
 #[derive(Queryable, Debug, Serialize, Identifiable, Deserialize)]
@@ -25,4 +27,5 @@ pub struct Post {
     pub title: String,
     pub body: String,
     pub user_id: i32,
+    pub topic: Option<String>,
 }

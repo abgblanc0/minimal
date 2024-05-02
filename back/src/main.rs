@@ -31,5 +31,10 @@ fn rocket() -> _ {
             routes::post::patch_post,
             routes::post::delete_post,
         ],
+    ).mount(
+        "/topics",
+        routes![
+            routes::topic::topics
+        ]
     )
 }

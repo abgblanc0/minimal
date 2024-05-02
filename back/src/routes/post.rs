@@ -1,5 +1,5 @@
 use crate::errors::response::MyError;
-use crate::models::post::{NewPost, Post, UpdatePost};
+use crate::models::post::*;
 use crate::schema::posts::user_id;
 use diesel::r2d2::{ConnectionManager, Pool};
 use diesel::PgConnection;

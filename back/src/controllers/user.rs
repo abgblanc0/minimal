@@ -6,7 +6,6 @@ use diesel::{QueryDsl, RunQueryDsl};
 
 type MyResult<T> = Result<T, diesel::result::Error>;
 
-
 pub fn get_user(conn: &mut PgConnection, user_id: i32) -> MyResult<User> {
     users.find(user_id)
             .first(conn)

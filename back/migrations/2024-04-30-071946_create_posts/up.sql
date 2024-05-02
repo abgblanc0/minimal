@@ -1,11 +1,18 @@
 -- Your SQL goes here
 
+CREATE TABLE topics (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE
+);
+
+
 CREATE TABLE posts (
     id SERIAL PRIMARY KEY,
     ctime timestamp with time zone DEFAULT now(),
     title VARCHAR(255) NOT NULL,
     body TEXT NOT NULL,
-    user_id INT REFERENCES users(id) ON DELETE CASCADE NOT NULL
+    user_id INT REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+    topic VARCHAR(255) REFERENCES topics(name)
 );
 
 
@@ -20,3 +27,6 @@ FROM
 
 INSERT INTO posts (title, body, user_id) 
 VALUES ('Hola', 'Este es un post de ejemplo', 1);
+
+INSERT INTO topics (name)
+VALUES ('Juegos')
