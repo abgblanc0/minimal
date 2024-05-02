@@ -12,7 +12,7 @@ pub fn get_user(conn: &mut PgConnection, user_id: i32) -> MyResult<User> {
             .first(conn)
 }
 pub fn get_users(conn: &mut PgConnection) -> MyResult<Vec<User>, > {
-    users.load::<User>(conn)
+    users.load(conn)
 }
 
 pub fn create_user(conn: &mut PgConnection, new_user: NewUser) -> MyResult<User> {
