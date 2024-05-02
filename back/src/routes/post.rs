@@ -19,10 +19,19 @@ pub fn posts(pool: &State<PgPool>) -> Result<Json<Vec<Post>>, MyError> {
 }
 
 #[get("/<other_user_id>")]
-pub fn posts_by_user_id(pool: &State<PgPool>, other_user_id: i32) -> Result<Json<Vec<Post>>, MyError>{
+pub fn posts_by_user_id(pool: &State<PgPool>, other_user_id: i32) -> Result<Json<Vec<Post>>, MyError> {
     let mut conn = pool.get().expect("Fail to conn");
     match get_posts_by_user_id(&mut conn, other_user_id) {
         Ok(posts) => Ok(Json(posts)),
+        Err(error) => Err(MyError::build(400, Some(error.to_string())))
+    }
+}
+
+#[post("/", format = "json", data = "<input>")]
+pub fn post_post(pool: &State<PgPool>, input: Json<NewPost>) -> Result<Json<Post>, MyError> {
+    let mut  conn = pool.get().expect("Fail to conn");
+    match create_post(&mut conn, input.into_inner()) {
+        Ok(post) => Ok(Json(post)),
         Err(error) => Err(MyError::build(400, Some(error.to_string())))
     }
 }
