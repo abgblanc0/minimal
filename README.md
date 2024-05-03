@@ -6,7 +6,7 @@ A really simple forum
 
 ## Tech Stack
 
-**Client:** React, TailwindCSS
+**Client:** React, Typescript, TailwindCSS
 
 **Server:** Rust, Rocket
 
