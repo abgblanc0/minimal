@@ -1,31 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from "react";
+import Terminal from "./components/Terminal";
 
-interface User {
-  id: number;
-  username: string;
-  // Aquí puedes agregar más propiedades si es necesario
-}
-
-function App() {
-  const [users, setUsers] = useState<User[]>([]);
-
-  useEffect(() => {
-    fetch('http://127.0.0.1:8000/users')
-      .then(response => response.json())
-      .then((data: User[]) => setUsers(data))
-      .catch(error => console.error('Error fetching users:', error));
-  }, []);
-
+export default function App() {
+  const [terminals, setTerminals] = useState(1);
+  const terminalArray = Array.from({ length: terminals }, (_, index) => index);
   return (
-    <div className="m-10">
-      <h1>Usuarios:</h1>
-      <ul>
-        {users.map(user => (
-          <li key={user.id}>{user.username}</li>
-        ))}
-      </ul>
+    //first:cols-span-1 doesnt work2 or idk how to do it
+    <div
+      className={`bg-zinc-400 h-screen grid gap-5 place-items-center font-hack text-xl ${
+        terminalArray.length > 1 ? "grid-cols-2" : ""
+      }`}
+    >
+      {terminalArray.map((index) => (
+        <Terminal
+          key={index}
+          terminals={terminals}
+          setTerminals={setTerminals}
+        />
+      ))}
     </div>
   );
 }
-
-export default App;
