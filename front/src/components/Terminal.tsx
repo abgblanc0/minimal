@@ -1,5 +1,6 @@
 import { KeyboardEvent, useState, ChangeEvent } from "react";
 import commands from "../utils/commands";
+
 interface TerminalProps {
   terminals: number;
   setTerminals: (num: number) => void;
@@ -9,7 +10,7 @@ export default function Terminal({
   terminals,
   setTerminals,
 }: TerminalProps) {
-  const prefix = "user@machine:~ $ ";
+  const prefix = "user@minimal:~ $ ";
   const [text, setText] = useState(prefix);
   const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setText(event.target.value);
@@ -46,7 +47,7 @@ export default function Terminal({
   return (
     <textarea
       value={text}
-      className="m-5 p-5 w-full h-full text-white bg-black border-2 rounded-xl focus:outline-none resize-none"
+      className="m-5 p-5 grow text-white bg-black border-2 rounded-xl focus:outline-none resize-none"
       onKeyDown={handleKeyDown}
       onChange={handleChange}
       spellCheck={false}
