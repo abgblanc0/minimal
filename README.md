@@ -1,8 +1,6 @@
-
 # Minimal
 
 A really simple forum
-
 
 ## Tech Stack
 
@@ -10,10 +8,22 @@ A really simple forum
 
 **Server:** Rust, Rocket
 
-**DDBB:** Postgres, Diesel (ORM)
+**DB:** Postgres, Diesel (ORM)
 
-## Environment Variables
+## Run Locally
 
-To run this project, you will need to add the following environment variables to your .env file
+Go to /back
 
-`DATABASE_URL`
+```bash
+  $ cargo install diesel_cli --no-default-features --features postgres
+  $ echo DATABASE_URL=postgres://postgres@localhost/minimal > .env
+  $ diesel setup
+  $ cargo run
+```
+
+Go to /front
+
+```bash
+  $ npm install
+  $ npm run dev
+```
