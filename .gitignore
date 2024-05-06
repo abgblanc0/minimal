@@ -47,4 +47,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-back/requests.http

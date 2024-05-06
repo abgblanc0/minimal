@@ -1,0 +1,58 @@
+### VSCODE REST CLIENT 
+
+GET http://localhost:8000/users HTTP/1.1
+
+###
+POST  http://localhost:8000/users/login HTTP/1.1
+content-type: application/json
+
+{
+    "email": "abgblanco@hotmail.com",
+    "password": "asdasdasd"
+}
+###
+
+POST http://localhost:8000/users HTTP/1.1
+content-type: application/json
+
+{
+    "username": "abgblanco",
+    "email": "abgblanco@hotmail.com",
+    "password": "asdasdasd"
+}
+###
+PATCH http://localhost:8000/users/2 HTTP/1.1
+content-type: application/json
+
+{
+    "username": "abgblaanco"
+}
+
+###
+DELETE http://localhost:8000/users/1 HTTP/1.1
+###
+GET http://localhost:8000/posts HTTP/1.1
+###
+
+###
+GET http://localhost:8000/posts/2 HTTP/1.1
+###
+
+PATCH http://localhost:8000/posts/2 HTTP/1.1
+content-type: application/json
+
+{
+    "topic": "Juegos"
+}
+###
+DELETE http://localhost:8000/posts/1 HTTP/1.1
+###
+
+POST http://localhost:8000/posts HTTP/1.1
+content-type: application/json
+
+{
+    "user_id": 2,
+    "title": "asdas",
+    "body": "loooooooool"
+}
