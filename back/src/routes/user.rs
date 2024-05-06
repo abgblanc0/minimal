@@ -1,5 +1,5 @@
 use crate::errors::response::MyError;
-use crate::models::user::{NewUser, UpdateUser, User};
+use crate::models::user::{NewUser, AuxUser, User};
 use diesel::r2d2::{ConnectionManager, Pool};
 use diesel::PgConnection;
 use rocket::serde::json::Json;
@@ -36,7 +36,7 @@ pub fn post_user(pool: &State<PgPool>, input: Json<NewUser>) -> Result<Json<User
 }
 
 #[patch("/<user_id>", data = "<input>")]
-pub fn patch_user(pool: &State<PgPool>, input: Json<UpdateUser>, user_id: i32) -> Result<Json<User>, MyError> {
+pub fn patch_user(pool: &State<PgPool>, input: Json<AuxUser>, user_id: i32) -> Result<Json<User>, MyError> {
     let mut conn = pool.get().expect("Error conn");
     match update_user(&mut conn, input.into_inner(), user_id ) {
         Ok(user) => Ok(Json(user)),
@@ -49,6 +49,15 @@ pub fn delete_user(pool: &State<PgPool>, user_id: i32) -> Result<&str, MyError> 
     let mut conn = pool.get().expect("Error conn");
     match erase_user(&mut conn, user_id) {
         Ok(result) => Ok("User deleted"),
+        Err(error) => Err(MyError::build(400, Some(error.to_string())))
+    }
+}
+
+#[post("/login", format="json", data = "<input>")]
+pub fn verify_user(pool: &State<PgPool>, input: Json<AuxUser>) -> Result<Json<User>, MyError>{
+    let mut conn = pool.get().expect("Error conn");
+    match check_user(&mut conn, input.into_inner()) {
+        Ok(found) => Ok(Json(found)),
         Err(error) => Err(MyError::build(400, Some(error.to_string())))
     }
 }

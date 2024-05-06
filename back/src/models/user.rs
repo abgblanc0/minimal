@@ -12,7 +12,7 @@ pub struct NewUser<'a> {
 
 #[derive(AsChangeset, Deserialize, Debug)]
 #[diesel(table_name = users)]
-pub struct UpdateUser<'a> {
+pub struct AuxUser<'a> {
     pub username: Option<&'a str>,
     pub email: Option<&'a str>,
     pub password: Option<&'a str>,
