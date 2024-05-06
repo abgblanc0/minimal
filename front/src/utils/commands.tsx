@@ -13,8 +13,8 @@ export default async function handleCommand(
       return cd(args[0], setPath);
     case "help":
       return help();
-    case "su":
-      return su();
+    case "login":
+      return login();
     default:
       return "command not found";
   }
@@ -82,6 +82,6 @@ function help() {
   return "cd, whoami, ls, su";
 }
 
-function su() {
+function login() {
   return "";
 }
