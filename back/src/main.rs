@@ -38,5 +38,5 @@ fn rocket() -> _ {
                 routes::post::delete_post,
             ],
         )
-        .mount("/topics", routes![routes::topic::topics])
+        .mount("/topics", routes![routes::topic::topics, routes::topic::posts])
 }

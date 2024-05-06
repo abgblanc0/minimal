@@ -5,6 +5,9 @@ CREATE TABLE topics (
     name VARCHAR(255) NOT NULL UNIQUE
 );
 
+INSERT INTO topics (name)
+VALUES ('misc');
+
 
 CREATE TABLE posts (
     id SERIAL PRIMARY KEY,
@@ -12,7 +15,7 @@ CREATE TABLE posts (
     title VARCHAR(255) NOT NULL,
     body TEXT NOT NULL,
     user_id INT REFERENCES users(id) ON DELETE CASCADE NOT NULL,
-    topic VARCHAR(255) REFERENCES topics(name)
+    topic VARCHAR(255) DEFAULT 'misc' REFERENCES topics(name)
 );
 
 
@@ -29,4 +32,4 @@ INSERT INTO posts (title, body, user_id)
 VALUES ('Hola', 'Este es un post de ejemplo', 1);
 
 INSERT INTO topics (name)
-VALUES ('Juegos')
+VALUES ('juegos');

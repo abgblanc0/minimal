@@ -1,6 +1,6 @@
 use crate::errors::response::MyError;
 use crate::models::post::*;
-use crate::schema::posts::user_id;
+use crate::schema::posts::{topic, user_id};
 use diesel::r2d2::{ConnectionManager, Pool};
 use diesel::PgConnection;
 use rocket::serde::json::Json;
@@ -26,6 +26,7 @@ pub fn posts_by_user_id(pool: &State<PgPool>, other_user_id: i32) -> Result<Json
         Err(error) => Err(MyError::build(400, Some(error.to_string())))
     }
 }
+
 
 #[post("/", format = "json", data = "<input>")]
 pub fn post_post(pool: &State<PgPool>, input: Json<NewPost>) -> Result<Json<Post>, MyError> {

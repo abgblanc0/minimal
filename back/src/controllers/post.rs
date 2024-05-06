@@ -13,6 +13,10 @@ pub fn get_posts_by_user_id(conn: &mut PgConnection, other: i32) -> MyResult<Vec
     posts.filter(user_id.eq(other)).get_results(conn)
 }
 
+pub fn get_posts_by_topic(conn: &mut PgConnection, other: String) -> MyResult<Vec<Post>>{
+    posts.filter(topic.eq(other)).get_results(conn)
+}
+
 pub fn create_post(conn: &mut PgConnection, new_post: NewPost) -> MyResult<Post>{
     diesel::insert_into(posts)
             .values(&new_post)
