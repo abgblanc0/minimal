@@ -7,12 +7,13 @@ export default function App() {
   return (
     //first:cols-span-1 doesnt work2 or idk how to do it
     <div
-      className={`bg-zinc-400 h-screen grid gap-5 place-items-center font-hack text-xl ${
+      className={`bg-zinc-400 h-screen grid gap-2 place-items-center font-hack text-xl ${
         terminalArray.length > 1 ? "grid-cols-2" : ""
       }`}
     >
       {terminalArray.map((index) => (
         <Terminal
+          style={index === 0 ? "" : ""}
           key={index}
           terminals={terminals}
           setTerminals={setTerminals}
