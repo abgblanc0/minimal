@@ -26,7 +26,8 @@ fn rocket() -> _ {
                 routes::user::post_user,
                 routes::user::patch_user,
                 routes::user::delete_user,
-                routes::user::verify_user
+                routes::user::verify_user,
+                routes::user::options_login,
             ],
         )
         .mount(

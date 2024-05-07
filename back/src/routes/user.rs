@@ -61,3 +61,10 @@ pub fn verify_user(pool: &State<PgPool>, input: Json<AuxUser>) -> Result<Json<Us
         Err(error) => Err(MyError::build(400, Some(error.to_string())))
     }
 }
+
+// I DONT LIKE THIS
+#[options("/login")]
+pub fn options_login() -> &'static str {
+    "OK"
+}
+
