@@ -41,7 +41,7 @@ function cd(args: string, setPath: (path: string) => void) {
 }
 
 function whoami(user?: User) {
-  return user?user.username:"user";
+  return user?user.username:"guest";
 }
 
 function shortcuts(){
@@ -81,7 +81,7 @@ function show_posts(posts: Post[]) {
 }
 
 function help() {
-  return "cd, whoami, ls, login, logout, shortcuts";
+  return "Available commands: cd, whoami, ls, login, logout, shortcuts";
 }
 
 //TODO: find way to do a good form terminal way, using prompts for now

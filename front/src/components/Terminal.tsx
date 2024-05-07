@@ -19,7 +19,7 @@ export default function Terminal({
   const [text, setText] = useState("");
 
   useEffect(() => {
-    setPrefix(`${user ? user.username : "user"}@minimal:~${path} $ `);
+    setPrefix(`${user ? user.username : "guest"}@minimal:~${path} $ `);
   }, [path, user]);
 
   useEffect(() => {
