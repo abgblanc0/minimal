@@ -8,7 +8,7 @@ export default function App() {
   return (
     <AuthProvider>
       <div
-        className={`bg-zinc-400 h-screen grid gap-2 place-items-center font-hack text-xl ${
+        className={`bg-[url('/public/wallpaper.png')] bg-cover bg-center bg-no-repeat h-screen grid gap-2 place-items-center font-hack text-xl ${
           terminalArray.length > 1 ? "grid-cols-2" : ""
         }`}
       >

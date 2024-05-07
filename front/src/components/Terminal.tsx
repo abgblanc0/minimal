@@ -58,7 +58,6 @@ export default function Terminal({
           logout,
           user ? user : undefined
         );
-        if (command === "logut") logout();
         setText(text + "\n" + result + "\n" + prefix);
       }
       if (event.key === "Backspace") {
@@ -72,7 +71,7 @@ export default function Terminal({
     <textarea
       id="terminal"
       value={text}
-      className={`p-5 grow h-full w-full text-white bg-black border-2 rounded-xl focus:outline-none resize-none ${style}`}
+      className={`p-5 grow h-[95%] w-[95%] text-white bg-black/60 border-2 rounded-xl focus:outline-none resize-none ${style}`}
       onKeyDown={handleKeyDown}
       onChange={handleChange}
       spellCheck={false}
