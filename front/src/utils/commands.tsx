@@ -22,6 +22,8 @@ export default async function handleCommand(
       return handleLogin(login);
     case "logout":
       return handleLogout(logout, user);
+    case "shorcuts":
+      return shortcuts();
     case "":
       return "";
     default:
@@ -40,6 +42,10 @@ function cd(args: string, setPath: (path: string) => void) {
 
 function whoami(user?: User) {
   return user?user.username:"user";
+}
+
+function shortcuts(){
+  return "CTRL+Enter -> new terminal\nCTRL+E -> close last terminal\nCTRL+L -> clear terminal"
 }
 
 // TODO: hardcoded for now
@@ -75,7 +81,7 @@ function show_posts(posts: Post[]) {
 }
 
 function help() {
-  return "cd, whoami, ls, login";
+  return "cd, whoami, ls, login, logout, shortcuts";
 }
 
 //TODO: find way to do a good form terminal way, using prompts for now
