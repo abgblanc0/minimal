@@ -1,5 +1,6 @@
 import { KeyboardEvent, useState, ChangeEvent, useEffect } from "react";
 import handleCommand from "../utils/commands";
+import { useAuth } from "./AuthProvider";
 
 interface TerminalProps {
   terminals: number;
@@ -12,37 +13,52 @@ export default function Terminal({
   style,
   setTerminals,
 }: TerminalProps) {
+  const { login, logout, user } = useAuth();
   const [path, setPath] = useState("/");
   const [prefix, setPrefix] = useState(`user@minimal:~${path} $ `);
-  const [text, setText] = useState(prefix);
+  const [text, setText] = useState("");
+
+  useEffect(() => {
+    setPrefix(`${user ? user.username : "user"}@minimal:~${path} $ `);
+  }, [path, user]);
+
+  useEffect(() => {
+    // TO DO: DONT ERASE TEXT, SHOW HISTORY
+    setText(prefix);
+  }, [prefix]);
+
   const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setText(event.target.value);
   };
-  useEffect(() => {
-    setPrefix(`user@minimal:~${path} $ `)
-    setText(prefix)
-  }, [path])
   const handleKeyDown = async (event: KeyboardEvent<HTMLTextAreaElement>) => {
-    if(event.ctrlKey){
+    if (event.ctrlKey) {
       if (event.code === "Enter") {
         setTerminals(terminals + 1);
       }
       // With KeyQ preventdefault doesnt works idk why -.-
-      if(event.code === "KeyE") {
+      if (event.code === "KeyE") {
         event.preventDefault();
         setTerminals(terminals - 1);
       }
-      if(event.code === "KeyL") {
+      if (event.code === "KeyL") {
         event.preventDefault();
         setText(prefix);
       }
-    }
-    else {
+    } else {
       if (event.key === "Enter") {
         event.preventDefault();
         const input = text.split("\n").pop()?.split("$")[1].trim();
-        const {command, args} = parseCommand(input? input: "");
-        const result = await handleCommand(path, setPath, command, args);
+        const { command, args } = parseCommand(input ? input : "");
+        const result = await handleCommand(
+          command,
+          args,
+          path,
+          setPath,
+          login,
+          logout,
+          user ? user : undefined
+        );
+        if (command === "logut") logout();
         setText(text + "\n" + result + "\n" + prefix);
       }
       if (event.key === "Backspace") {
@@ -54,17 +70,17 @@ export default function Terminal({
 
   return (
     <textarea
+      id="terminal"
       value={text}
       className={`p-5 grow h-full w-full text-white bg-black border-2 rounded-xl focus:outline-none resize-none ${style}`}
       onKeyDown={handleKeyDown}
       onChange={handleChange}
       spellCheck={false}
-    >
-    </textarea>
+    ></textarea>
   );
 }
 
-function parseCommand(input: string): { command: string, args: string[] } {
+function parseCommand(input: string): { command: string; args: string[] } {
   const parts = input.trim().split(" ");
   const command = parts.shift() || "";
   const args = parts;

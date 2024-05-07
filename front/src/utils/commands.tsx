@@ -1,12 +1,17 @@
+import { Post, User, Topic } from "../types";
+
 export default async function handleCommand(
+  command: string,
+  args: string[],
   path: string,
   setPath: (path: string) => void,
-  command: string,
-  args: string[]
+  login: (email: string) => void,
+  logout: () => void,
+  user?: User
 ) {
   switch (command) {
     case "whoami":
-      return whoami();
+      return whoami(user);
     case "ls":
       return ls(path);
     case "cd":
@@ -14,12 +19,16 @@ export default async function handleCommand(
     case "help":
       return help();
     case "login":
-      return login();
+      return handleLogin(login);
+    case "logout":
+      return handleLogout(logout, user);
+    case "":
+      return "";
     default:
-      return "command not found";
+      return `${command}: command not found`;
   }
 }
-
+// TO DO: Hardcoded for now
 function cd(args: string, setPath: (path: string) => void) {
   console.log(args);
   if (args == "topics") setPath("/topics");
@@ -29,10 +38,11 @@ function cd(args: string, setPath: (path: string) => void) {
   return "";
 }
 
-function whoami() {
-  return "user";
+function whoami(user?: User) {
+  return user?user.username:"user";
 }
 
+// TODO: hardcoded for now
 async function ls(path: string) {
   if (path == "/") {
     return "...";
@@ -43,23 +53,9 @@ async function ls(path: string) {
     const topics = show_topics(data);
     return topics;
   }
-  console.log(path.slice(1));
   const response = await fetch(`http://127.0.0.1:8000/topics/${path.slice(1)}`);
   const data = await response.json();
   return show_posts(data);
-}
-
-interface Topic {
-  name: string;
-}
-
-interface Post {
-  id: number;
-  ctime: number;
-  title: string;
-  body: string;
-  user_id: number;
-  topic: string;
 }
 
 function show_topics(topics: Topic[]) {
@@ -79,9 +75,31 @@ function show_posts(posts: Post[]) {
 }
 
 function help() {
-  return "cd, whoami, ls, su";
+  return "cd, whoami, ls, login";
 }
 
-function login() {
-  return "";
+//TODO: find way to do a good form terminal way, using prompts for now
+async function handleLogin(login: (email: string) => void) {
+  const email = prompt("Email: ");
+  const password = prompt("Password: ");
+  const response = await fetch("http://localhost:8000/users/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email: email, password: password }),
+  });
+  const user: User = await response.json();
+  if (response.ok) {
+    login(user.username);
+  }
+  return response.ok ? "OK" : "OKN'T";
+}
+
+function handleLogout(logout: any, user?: User) {
+  if(user){
+    logout()
+    return "Logged out"
+  }
+  return "You are already logged out"
 }

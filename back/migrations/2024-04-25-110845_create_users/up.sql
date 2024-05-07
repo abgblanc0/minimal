@@ -18,3 +18,4 @@ INSERT INTO users (username, email, password) VALUES ('user7', 'user7@example.co
 INSERT INTO users (username, email, password) VALUES ('user8', 'user8@example.com', 'password8');
 INSERT INTO users (username, email, password) VALUES ('user9', 'user9@example.com', 'password9');
 INSERT INTO users (username, email, password) VALUES ('user10', 'user10@example.com', 'password10');
+INSERT INTO users (username, email, password) VALUES ('asd', 'asd', 'asd');
