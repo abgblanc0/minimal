@@ -56,12 +56,13 @@ export default function Input({
           login,
           logout
         );
-        setHistory([...history, { command: `${command} ${args}`, output: output }]);
+        setHistory([...history, { command: `${command} ${args}`, outputs: output }]);
         setInput("");
         console.log(history);
       }
     }
   };
+  console.log(path);
   return (
     <input
       onKeyDown={handleKeyDown}

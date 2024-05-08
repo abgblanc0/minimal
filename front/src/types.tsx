@@ -12,9 +12,10 @@ export interface User {
 
 export interface Topic {
     name: string;
+    parent: string;
 }
 
 export interface Command {
     command: string;
-    output: string;
+    outputs: string[];
 }

@@ -14,7 +14,7 @@ export default function Terminal({ terminals, setTerminals }: TerminalProps) {
   const [path, setPath] = useState("/");
   return (
     <div
-      className={`p-5 grow h-[95%] w-[95%] text-white bg-black/60 border-2 rounded-xl focus:outline-none resize-none`}
+      className={`p-5 grow h-[95%] w-[95%] text-white bg-black/60 border-2 rounded-xl focus:outline-none resize-none overflow-auto`}
     >
       <History history={history} />
       <div className="flex gap-2">

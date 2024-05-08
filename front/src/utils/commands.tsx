@@ -1,5 +1,9 @@
 import { Post, User, Topic } from "../types";
 
+const commands = ["whoami", "ls", "cd", "help", "login", "logout", "keys", "cat"]
+let topics: Topic[] = [];
+
+
 export default async function handleCommand(
   command: string,
   args: string[],
@@ -8,81 +12,88 @@ export default async function handleCommand(
   login: (email: string) => void,
   logout: () => void,
   user?: User
-) {
+) : Promise<string[]>{
   switch (command) {
     case "whoami":
       return whoami(user);
     case "ls":
       return ls(path);
     case "cd":
-      return cd(args[0], setPath);
+      return cd(args[0], path, setPath);
     case "help":
-      return help();
+      return commands;
+    case "cat":
+      return cat();
     case "login":
       return handleLogin(login);
     case "logout":
       return handleLogout(logout, user);
-    case "shorcuts":
-      return shortcuts();
+    case "keys":
+      return keys();
     case "":
-      return "";
+      return [""];
     default:
-      return `${command}: command not found`;
+      return [`${command}: command not found`];
   }
 }
 // TO DO: Hardcoded for now
-function cd(args: string, setPath: (path: string) => void) {
+async function cd(args: string, path:string, setPath: (path: string) => void) {
   console.log(args);
-  if (args == "topics") setPath("/topics");
-  if (args == "juegos") setPath("/juegos");
-  if (args == "misc") setPath("/misc");
+  if (args == "topics") {
+    const response = await fetch("http://127.0.0.1:8000/topics");
+    topics = await response.json();
+    setPath("/topics")
+  };
+  topics.forEach(topic => {
+    if(args === topic.name){
+      setPath(`${path}/${topic.name}`)
+    }
+  })
+  if(args == "..") setPath(path === "/" ? "/" : path.replace(path.split('/').pop()!, ""))
   if (!args) setPath("/");
-  return "";
+  return [""];
 }
 
 function whoami(user?: User) {
-  return user?user.username:"guest";
+  return [user?user.username:"guest"];
 }
 
-function shortcuts(){
-  return "CTRL+Enter -> new terminal\nCTRL+E -> close last terminal\nCTRL+L -> clear terminal"
+function keys(){
+  return ["CTRL+Enter -> new terminal","CTRL+E -> close last terminal","CTRL+L -> clear terminal"]
 }
 
 // TODO: hardcoded for now
 async function ls(path: string) {
   if (path == "/") {
-    return "...";
+    return ["..."];
   }
   if (path == "/topics") {
     const response = await fetch("http://127.0.0.1:8000/topics");
     const data = await response.json();
-    const topics = show_topics(data);
-    return topics;
+    return show_topics(data);
   }
   const response = await fetch(`http://127.0.0.1:8000/topics/${path.slice(1)}`);
   const data: Post[] = await response.json();
   return show_posts(data);
 }
 
-function show_topics(topics: Topic[]) {
-  let result = "";
+function show_topics(data: Topic[]) {
+  topics = data
+  let result:string[] = [];
   for (const topic of topics) {
-    result += topic.name + "\n";
+    result.push(topic.name);
   }
-  return result.slice(0, -1);
+  return result;
 }
-
+1
 function show_posts(posts: Post[]) {
-  let result = "";
+  let result:string[] = [];
   for (const post of posts) {
-    result += `${post.title}.txt\n`;
+    result.push(`${post.title}.txt`);
   }
   return result;
 }
 
-function help() {
-  return "Available commands: cd, whoami, ls, login, logout, shortcuts";
-}
 
 //TODO: find way to do a good form terminal way, using prompts for now
 async function handleLogin(login: (email: string) => void) {
@@ -99,13 +110,17 @@ async function handleLogin(login: (email: string) => void) {
   if (response.ok) {
     login(user.username);
   }
-  return response.ok ? "OK" : "OKN'T";
+  return response.ok ? ["OK"] : ["OKN'T"];
 }
 
 function handleLogout(logout: any, user?: User) {
   if(user){
-    logout()
-    return "Logged out"
+    logout();
+    return ["Logged out"];
   }
-  return "You are already logged out"
+  return ["You are already logged out"];
+}
+
+function cat() {
+  return [""];
 }
