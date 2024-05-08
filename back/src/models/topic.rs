@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 #[diesel(table_name = topics)]
 pub struct NewTopic<'a> {
     pub name: &'a str,
+    pub parent: Option<&'a str>
 }
 
 
@@ -14,4 +15,5 @@ pub struct NewTopic<'a> {
 pub struct Topic {
     id: i32,
     name: String,
+    parent: Option<String>
 }

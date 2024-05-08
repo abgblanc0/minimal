@@ -1,23 +1,23 @@
 -- Your SQL goes here
-
 CREATE TABLE topics (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL UNIQUE
+    name VARCHAR(255) NOT NULL UNIQUE,
+    parent VARCHAR(255) REFERENCES topics(name) ON DELETE CASCADE
 );
-
-INSERT INTO topics (name)
-VALUES ('misc');
 
 
 CREATE TABLE posts (
     id SERIAL PRIMARY KEY,
-    ctime timestamp with time zone DEFAULT now(),
+    ctime TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     title VARCHAR(255) NOT NULL,
     body TEXT NOT NULL,
     user_id INT REFERENCES users(id) ON DELETE CASCADE NOT NULL,
-    topic VARCHAR(255) DEFAULT 'misc' REFERENCES topics(name)
+    topic VARCHAR(255) DEFAULT 'misc' REFERENCES topics(name),
+    UNIQUE (title, topic)
 );
 
+INSERT INTO topics (name)
+VALUES ('misc');
 
 -- Insertar un post para cada usuario
 INSERT INTO posts (title, body, user_id)

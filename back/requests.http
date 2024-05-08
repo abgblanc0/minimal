@@ -54,5 +54,6 @@ content-type: application/json
 {
     "user_id": 2,
     "title": "asdas",
-    "body": "loooooooool"
+    "body": "loooooooool",
+    "topic": "juegos"
 }

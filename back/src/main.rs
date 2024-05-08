@@ -40,5 +40,12 @@ fn rocket() -> _ {
                 routes::post::delete_post,
             ],
         )
-        .mount("/topics", routes![routes::topic::topics, routes::topic::posts])
+        .mount(
+            "/topics",
+            routes![
+                routes::topic::topics,
+                routes::topic::posts,
+                routes::topic::post_by_topic
+            ],
+        )
 }
