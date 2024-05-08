@@ -13,3 +13,8 @@ export interface User {
 export interface Topic {
     name: string;
 }
+
+export interface Command {
+    command: string;
+    output: string;
+}

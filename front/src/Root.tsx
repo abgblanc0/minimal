@@ -14,7 +14,7 @@ export default function App() {
       >
         {terminalArray.map((index) => (
           <Terminal
-            style={index === 0 ? "" : ""}
+            //style={index === 0 ? "" : ""}
             key={index}
             terminals={terminals}
             setTerminals={setTerminals}

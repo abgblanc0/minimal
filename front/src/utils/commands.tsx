@@ -60,7 +60,7 @@ async function ls(path: string) {
     return topics;
   }
   const response = await fetch(`http://127.0.0.1:8000/topics/${path.slice(1)}`);
-  const data = await response.json();
+  const data: Post[] = await response.json();
   return show_posts(data);
 }
 
@@ -75,7 +75,7 @@ function show_topics(topics: Topic[]) {
 function show_posts(posts: Post[]) {
   let result = "";
   for (const post of posts) {
-    result += `---${post.title}---\n${post.body}\n`;
+    result += `${post.title}.txt\n`;
   }
   return result;
 }
