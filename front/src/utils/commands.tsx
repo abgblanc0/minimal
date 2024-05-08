@@ -72,7 +72,7 @@ async function ls(path: string) {
     const data = await response.json();
     return show_topics(data);
   }
-  const response = await fetch(`http://127.0.0.1:8000/topics/${path.slice(1)}`);
+  const response = await fetch(`http://127.0.0.1:8000/topics/${path.split("/").pop()!}`);
   const data: Post[] = await response.json();
   return show_posts(data);
 }
