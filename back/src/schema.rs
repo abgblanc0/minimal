@@ -5,8 +5,8 @@ diesel::table! {
         id -> Int4,
         ctime -> Nullable<Timestamptz>,
         #[max_length = 255]
-        title -> Varchar,
-        body -> Text,
+        name -> Varchar,
+        content -> Text,
         user_id -> Int4,
         #[max_length = 255]
         topic -> Nullable<Varchar>,

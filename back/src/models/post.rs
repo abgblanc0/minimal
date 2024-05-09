@@ -6,16 +6,16 @@ use serde::{Deserialize, Serialize};
 #[diesel(table_name = posts)]
 pub struct NewPost<'a> {
     pub user_id: i32,
-    pub title: &'a str,
-    pub body: &'a str,
+    pub name: &'a str,
+    pub content: &'a str,
     pub topic: Option<&'a str>,
 }
 
 #[derive(AsChangeset, Deserialize)]
 #[diesel(table_name = posts)]
 pub struct UpdatePost<'a> {
-    pub title: Option<&'a str>,
-    pub body: Option<&'a str>,
+    pub name: Option<&'a str>,
+    pub content: Option<&'a str>,
     pub topic: Option<&'a str>,
 }
 
@@ -24,8 +24,8 @@ pub struct UpdatePost<'a> {
 pub struct Post {
     pub id: i32,
     pub ctime: Option<chrono::NaiveDateTime>,
-    pub title: String,
-    pub body: String,
+    pub name: String,
+    pub content: String,
     pub user_id: i32,
     pub topic: Option<String>,
 }

@@ -21,10 +21,10 @@ pub fn get_posts_by_topic(conn: &mut PgConnection, other: &str) -> MyResult<Vec<
     posts.filter(topic.eq(other)).get_results(conn)
 }
 
-pub fn get_post_by_topic_and_title(conn: &mut PgConnection, topic_name: &str, post_title: &str) -> MyResult<Post> {
+pub fn get_post_by_topic_and_title(conn: &mut PgConnection, topic_name: &str, post_name: &str) -> MyResult<Post> {
     posts
         .filter(topic.eq(topic_name))
-        .filter(title.eq(post_title))
+        .filter(name.eq(post_name))
         .get_result(conn)
 }
 

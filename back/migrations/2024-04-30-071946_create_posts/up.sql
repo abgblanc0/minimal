@@ -9,18 +9,18 @@ CREATE TABLE topics (
 CREATE TABLE posts (
     id SERIAL PRIMARY KEY,
     ctime TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    title VARCHAR(255) NOT NULL,
-    body TEXT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
     user_id INT REFERENCES users(id) ON DELETE CASCADE NOT NULL,
     topic VARCHAR(255) DEFAULT 'misc' REFERENCES topics(name),
-    UNIQUE (title, topic)
+    UNIQUE (name, topic)
 );
 
 INSERT INTO topics (name)
 VALUES ('misc');
 
 -- Insertar un post para cada usuario
-INSERT INTO posts (title, body, user_id)
+INSERT INTO posts (name, content, user_id)
 SELECT 
     CONCAT('Post de ', u.username),
     CONCAT('Contenido del post de ', u.username),
@@ -28,7 +28,7 @@ SELECT
 FROM 
     users u;
 
-INSERT INTO posts (title, body, user_id) 
+INSERT INTO posts (name, content, user_id) 
 VALUES ('Hola', 'Este es un post de ejemplo', 1);
 
 INSERT INTO topics (name)
