@@ -26,12 +26,6 @@ pub fn create_user(conn: &mut PgConnection, new_user: NewUser) -> MyResult<User>
         .get_result(conn)
 }
 
-pub fn create_users(conn: &mut PgConnection, new_users: Vec<NewUser>) -> MyResult<Vec<User>> {
-    diesel::insert_into(users)
-        .values(&new_users)
-        .get_results(conn)
-}
-
 pub fn update_user(conn: &mut PgConnection, user: AuxUser, user_id: i32) -> MyResult<User> {
     diesel::update(users.find(user_id))
         .set(user)

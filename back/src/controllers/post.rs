@@ -9,6 +9,10 @@ pub fn get_posts(conn: &mut PgConnection) -> MyResult<Vec<Post>> {
     posts.load(conn)
 }
 
+pub fn get_post_by_id(conn: &mut PgConnection, other: i32) -> MyResult<Post> {
+    posts.find(other).get_result(conn)
+}
+
 pub fn get_posts_by_user_id(conn: &mut PgConnection, other: i32) -> MyResult<Vec<Post>> {
     posts.filter(user_id.eq(other)).get_results(conn)
 }

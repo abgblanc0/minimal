@@ -1,6 +1,5 @@
 use crate::errors::response::MyError;
 use crate::models::post::*;
-use crate::schema::posts::{topic, user_id};
 use diesel::r2d2::{ConnectionManager, Pool};
 use diesel::PgConnection;
 use rocket::serde::json::Json;
@@ -18,11 +17,11 @@ pub fn posts(pool: &State<PgPool>) -> Result<Json<Vec<Post>>, MyError> {
     }
 }
 
-#[get("/<other_user_id>")]
-pub fn posts_by_user_id(pool: &State<PgPool>, other_user_id: i32) -> Result<Json<Vec<Post>>, MyError> {
+#[get("/<post_id>")]
+pub fn post_by_id(pool: &State<PgPool>, post_id: i32) -> Result<Json<Post>, MyError> {
     let mut conn = pool.get().expect("Fail to conn");
-    match get_posts_by_user_id(&mut conn, other_user_id) {
-        Ok(posts) => Ok(Json(posts)),
+    match get_post_by_id(&mut conn, post_id) {
+        Ok(post) => Ok(Json(post)),
         Err(error) => Err(MyError::build(400, Some(error.to_string())))
     }
 }
@@ -41,7 +40,7 @@ pub fn post_post(pool: &State<PgPool>, input: Json<NewPost>) -> Result<Json<Post
 pub fn delete_post(pool: &State<PgPool>, post_id: i32) -> Result<& str, MyError> {
     let mut conn = pool.get().expect("Fail to conn");
     match erase_post(&mut conn, post_id) {
-        Ok(result) => Ok("Post deleted"),
+        Ok(_) => Ok("Post deleted"),
         Err(error) => Err(MyError::build(400, Some(error.to_string())))
     }
 }

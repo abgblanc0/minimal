@@ -1,5 +1,3 @@
-#![allow(unused)]
-
 use cors::CORS;
 
 #[macro_use]
@@ -22,6 +20,7 @@ fn rocket() -> _ {
             "/users",
             routes![
                 routes::user::users,
+                routes::user::posts_by_user_id,
                 routes::user::user_by_id,
                 routes::user::post_user,
                 routes::user::patch_user,
@@ -34,7 +33,7 @@ fn rocket() -> _ {
             "/posts",
             routes![
                 routes::post::posts,
-                routes::post::posts_by_user_id,
+                routes::post::post_by_id,
                 routes::post::post_post,
                 routes::post::patch_post,
                 routes::post::delete_post,
