@@ -10,14 +10,14 @@ export default function History({ history }: HistoryProps) {
       {history.map((command, index) => (
         <div key={index}>
           <div className="flex">
-            <Prefix />
+            <Prefix path={command.path} username={command.username}/>
             <p className="ml-2">{command.command}</p>
           </div>
           
           {command.outputs.map((out, index) => (
-            <p key={index}>
-              {out}
-            </p>
+              <p key={index}>
+                {out}
+              </p>
           ))}
   
         </div>

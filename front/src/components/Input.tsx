@@ -1,7 +1,7 @@
 import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import handleCommand from "../utils/commands";
 import { useAuth } from "./AuthProvider";
-import { Command } from "../types";
+import { Command, User } from "../types";
 
 type InputProps = {
   terminals: number;
@@ -10,6 +10,7 @@ type InputProps = {
   setPath: (newPath: string) => void;
   history: Command[];
   setHistory: (newHistory: Command[]) => void;
+  user?: User
 };
 
 export default function Input({
@@ -19,6 +20,7 @@ export default function Input({
   setPath,
   history,
   setHistory,
+  user
 }: InputProps) {
   const { login, logout } = useAuth();
   const [input, setInput] = useState("");
@@ -54,22 +56,21 @@ export default function Input({
           path,
           setPath,
           login,
-          logout
+          logout,
+          user
         );
-        setHistory([...history, { command: `${command} ${args}`, outputs: output }]);
+        setHistory([...history, { username: user?.username, path: path, command: `${command} ${args}`, outputs: output }]);
         setInput("");
-        console.log(history);
       }
     }
   };
-  console.log(path);
   return (
     <input
       onKeyDown={handleKeyDown}
       value={input}
       ref={inputRef}
       onChange={handleChange}
-      className="bg-transparent focus:outline-none w-full"
+      className="bg-transparent focus:outline-none flex-grow"
     />
   );
 }

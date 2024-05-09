@@ -1,8 +1,9 @@
 import { Post, User, Topic } from "../types";
 
+const home = ["AllPosts", "User", "Topics", "MyPosts"]
 const commands = ["whoami", "ls", "cd", "help", "login", "logout", "keys", "cat"]
 let topics: Topic[] = [];
-
+let posts: Post[] = [];
 
 export default async function handleCommand(
   command: string,
@@ -23,7 +24,7 @@ export default async function handleCommand(
     case "help":
       return commands;
     case "cat":
-      return cat();
+      return cat(args[0]);
     case "login":
       return handleLogin(login);
     case "logout":
@@ -38,19 +39,18 @@ export default async function handleCommand(
 }
 // TO DO: Hardcoded for now
 async function cd(args: string, path:string, setPath: (path: string) => void) {
-  console.log(args);
   if (args == "topics") {
     const response = await fetch("http://127.0.0.1:8000/topics");
     topics = await response.json();
     setPath("/topics")
   };
   topics.forEach(topic => {
-    if(args === topic.name){
+    if(args === topic.name && !path.includes(args)){
       setPath(`${path}/${topic.name}`)
     }
   })
-  if(args == "..") setPath(path === "/" ? "/" : path.replace(path.split('/').pop()!, ""))
-  if (!args) setPath("/");
+  if(args == "..") setPath(path === "/" ? "/" : path.replace("/"+path.split('/').pop()!, ""))
+  if (!args) setPath("");
   return [""];
 }
 
@@ -64,8 +64,8 @@ function keys(){
 
 // TODO: hardcoded for now
 async function ls(path: string) {
-  if (path == "/") {
-    return ["..."];
+  if (path == "") {
+    return home;
   }
   if (path == "/topics") {
     const response = await fetch("http://127.0.0.1:8000/topics");
@@ -74,6 +74,7 @@ async function ls(path: string) {
   }
   const response = await fetch(`http://127.0.0.1:8000/topics/${path.split("/").pop()!}`);
   const data: Post[] = await response.json();
+  posts = data;
   return show_posts(data);
 }
 
@@ -93,7 +94,6 @@ function show_posts(posts: Post[]) {
   }
   return result;
 }
-
 
 //TODO: find way to do a good form terminal way, using prompts for now
 async function handleLogin(login: (email: string) => void) {
@@ -121,6 +121,14 @@ function handleLogout(logout: any, user?: User) {
   return ["You are already logged out"];
 }
 
-function cat() {
-  return [""];
+async function cat(args: string) {
+  let post: Post;
+  posts.forEach(rpost => {
+    if(rpost.title === args.replace(".txt", ""))
+      post = rpost;
+  })
+  console.log(post!);
+  const response = await fetch(`http://localhost:8000/posts/${post!.id}`)
+  const data: Post = await response.json();
+  return ["---  " + data.title + "  ---", data.body, "user: " + data.user_id];
 }

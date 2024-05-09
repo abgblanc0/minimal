@@ -17,8 +17,6 @@ export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }
 
   // Función para iniciar sesión
   const login = (username: string) => {
-    // Aquí puedes realizar la lógica de autenticación, como validar credenciales en el servidor
-    // Por simplicidad, aquí simplemente establecemos al usuario como "logueado" con un objeto que contiene su correo electrónico
     setUser({ username });
   };
 

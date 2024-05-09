@@ -12,10 +12,20 @@ export interface User {
 
 export interface Topic {
     name: string;
-    parent: string;
+    parent: Topic;
+    child: Topic;
 }
 
 export interface Command {
+    username: string | undefined;
+    path: string;
     command: string;
     outputs: string[];
+}
+
+export interface Directory {
+    name: string;
+    parent?: Directory;
+    directorys?: Directory[];
+    files?: string[];
 }
