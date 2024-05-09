@@ -1,30 +1,39 @@
-import { Post, User, Topic } from "../types";
+import { Post, User, Directory, Topic } from "../types";
 
-const home = ["AllPosts", "User", "Topics", "MyPosts"]
-const commands = ["whoami", "ls", "cd", "help", "login", "logout", "keys", "cat"]
-let topics: Topic[] = [];
-let posts: Post[] = [];
-
+export const home: Directory = {
+  name: "home",
+  directorys: [{ name: "topics" }],
+};
+const commands = [
+  "whoami",
+  "ls",
+  "cd",
+  "help",
+  "login",
+  "logout",
+  "keys",
+  "cat",
+];
 export default async function handleCommand(
   command: string,
   args: string[],
-  path: string,
-  setPath: (path: string) => void,
+  dir: Directory,
+  setDir: (dir: Directory) => void,
   login: (email: string) => void,
   logout: () => void,
   user?: User
-) : Promise<string[]>{
+): Promise<string[]> {
   switch (command) {
     case "whoami":
       return whoami(user);
     case "ls":
-      return ls(path);
+      return ls(dir);
     case "cd":
-      return cd(args[0], path, setPath);
+      return cd(args[0], dir, setDir);
     case "help":
       return commands;
     case "cat":
-      return cat(args[0]);
+      return cat(args[0], dir);
     case "login":
       return handleLogin(login);
     case "logout":
@@ -37,62 +46,71 @@ export default async function handleCommand(
       return [`${command}: command not found`];
   }
 }
-// TO DO: Hardcoded for now
-async function cd(args: string, path:string, setPath: (path: string) => void) {
-  if (args == "topics") {
-    const response = await fetch("http://127.0.0.1:8000/topics");
-    topics = await response.json();
-    setPath("/topics")
-  };
-  topics.forEach(topic => {
-    if(args === topic.name && !path.includes(args)){
-      setPath(`${path}/${topic.name}`)
+async function cd(
+  args: string,
+  dir: Directory,
+  setDir: (dir: Directory) => void
+) {
+  let ok: boolean = false;
+  dir.directorys?.forEach((subdir) => {
+    if (subdir.name === args) {
+      setDir(subdir);
+      ok = true;
     }
-  })
-  if(args == "..") setPath(path === "/" ? "/" : path.replace("/"+path.split('/').pop()!, ""))
-  if (!args) setPath("");
-  return [""];
+  });
+  if (args == "..") {
+    setDir(dir.parent ? dir.parent : home);
+    ok = true;
+  }
+  if (!args) {
+    setDir(home);
+    ok = true;
+  }
+  return [ok ? "" : `cd: no such file or directory: ${args}`];
+}
+
+export async function fetchDir(dir: Directory) {
+  let aux = "";
+  if(dir.name === "topics"){
+    aux = "/topics"
+    const response = await fetch(`http://localhost:8000${aux}`);
+    const data: Topic[] = await response.json();
+    let dirs: Directory[] = [];
+    data.forEach(topic => {
+      dirs.push({parent: dir, name: topic.name})
+    })
+    dir.directorys = dirs;
+  }
+  if(dir.parent && dir.parent.name === "topics"){
+    aux = `/topics/${dir.name}`;
+    const response = await fetch(`http://localhost:8000${aux}`);
+    const data: Post[] = await response.json();
+    dir.files = data;
+  }
 }
 
 function whoami(user?: User) {
-  return [user?user.username:"guest"];
+  return [user ? user.username : "guest"];
 }
 
-function keys(){
-  return ["CTRL+Enter -> new terminal","CTRL+E -> close last terminal","CTRL+L -> clear terminal"]
+function keys() {
+  return [
+    "CTRL+Enter -> new terminal",
+    "CTRL+E -> close last terminal",
+    "CTRL+L -> clear terminal",
+  ];
 }
 
-// TODO: hardcoded for now
-async function ls(path: string) {
-  if (path == "") {
-    return home;
-  }
-  if (path == "/topics") {
-    const response = await fetch("http://127.0.0.1:8000/topics");
-    const data = await response.json();
-    return show_topics(data);
-  }
-  const response = await fetch(`http://127.0.0.1:8000/topics/${path.split("/").pop()!}`);
-  const data: Post[] = await response.json();
-  posts = data;
-  return show_posts(data);
-}
-
-function show_topics(data: Topic[]) {
-  topics = data
-  let result:string[] = [];
-  for (const topic of topics) {
-    result.push(topic.name);
-  }
-  return result;
-}
-1
-function show_posts(posts: Post[]) {
-  let result:string[] = [];
-  for (const post of posts) {
-    result.push(`${post.title}.txt`);
-  }
-  return result;
+async function ls(dir: Directory) {
+  let output: string[] = [];
+  console.log(dir);
+  dir.directorys?.forEach((subdir) => {
+    output.push(subdir.name);
+  });
+  dir.files?.forEach((file) => {
+    output.push(file.name);
+  });
+  return output;
 }
 
 //TODO: find way to do a good form terminal way, using prompts for now
@@ -114,21 +132,24 @@ async function handleLogin(login: (email: string) => void) {
 }
 
 function handleLogout(logout: any, user?: User) {
-  if(user){
+  if (user) {
     logout();
     return ["Logged out"];
   }
   return ["You are already logged out"];
 }
 
-async function cat(args: string) {
-  let post: Post;
-  posts.forEach(rpost => {
-    if(rpost.title === args.replace(".txt", ""))
-      post = rpost;
+async function cat(args: string, dir: Directory) {
+  let uri = "";
+  dir.files?.forEach(file => {
+    if(file.name == args){
+      uri = `/posts/${file.id}`;
+    }
   })
-  console.log(post!);
-  const response = await fetch(`http://localhost:8000/posts/${post!.id}`)
-  const data: Post = await response.json();
-  return ["---  " + data.title + "  ---", data.body, "user: " + data.user_id];
+  if(uri){
+    const response = await fetch(`http://localhost:8000${uri}`);
+    const data:Post = await response.json();
+    return [data.name, data.body, "user: "+data.user_id];
+  }
+  return [""];
 }

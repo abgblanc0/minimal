@@ -1,13 +1,13 @@
 import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import handleCommand from "../utils/commands";
 import { useAuth } from "./AuthProvider";
-import { Command, User } from "../types";
+import { Command, Directory, User } from "../types";
 
 type InputProps = {
   terminals: number;
   setTerminals: (terminals: number) => void;
-  path: string;
-  setPath: (newPath: string) => void;
+  dir: Directory;
+  setDir: (dir: Directory) => void;
   history: Command[];
   setHistory: (newHistory: Command[]) => void;
   user?: User
@@ -16,8 +16,8 @@ type InputProps = {
 export default function Input({
   terminals,
   setTerminals,
-  path,
-  setPath,
+  dir,
+  setDir,
   history,
   setHistory,
   user
@@ -53,13 +53,13 @@ export default function Input({
         const output = await handleCommand(
           command,
           args,
-          path,
-          setPath,
+          dir,
+          setDir,
           login,
           logout,
           user
         );
-        setHistory([...history, { username: user?.username, path: path, command: `${command} ${args}`, outputs: output }]);
+        setHistory([...history, { username: user?.username, dir: dir, command: `${command} ${args}`, outputs: output }]);
         setInput("");
       }
     }

@@ -1,7 +1,7 @@
 export interface Post {
     id: number;
     ctime: number;
-    title: string;
+    name: string;
     body: string;
     user_id: number;
     topic: string;
@@ -18,7 +18,7 @@ export interface Topic {
 
 export interface Command {
     username: string | undefined;
-    path: string;
+    dir: Directory;
     command: string;
     outputs: string[];
 }
@@ -27,5 +27,5 @@ export interface Directory {
     name: string;
     parent?: Directory;
     directorys?: Directory[];
-    files?: string[];
+    files?: Post[];
 }
