@@ -28,5 +28,6 @@ Go to /front
   $ npm run dev
 ```
 ## Screenshots
-![image](https://github.com/abgblanc0/minimal/assets/99885502/7d96a188-d93b-4824-9044-ce188ab19024)
-![image](https://github.com/abgblanc0/minimal/assets/99885502/a223ffd1-8d34-4411-b5c8-83a89bf5780a)
+![image](https://github.com/abgblanc0/minimal/assets/99885502/bb6c48b9-f046-4312-8d83-cf4d9d1f6716)
+![image](https://github.com/abgblanc0/minimal/assets/99885502/10d6126b-6658-454e-8d01-a7d299742eb1)
+
