@@ -1,6 +1,7 @@
 -- Your SQL goes here
 CREATE TABLE topics (
     id SERIAL PRIMARY KEY,
+    ctime TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     name VARCHAR(255) NOT NULL UNIQUE,
     parent VARCHAR(255) REFERENCES topics(name) ON DELETE CASCADE
 );

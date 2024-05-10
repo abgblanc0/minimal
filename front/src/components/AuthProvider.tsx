@@ -4,7 +4,7 @@ import { User } from "../types";
 // Definimos el tipo para el contexto de autenticación
 interface AuthContextType {
   user: User | null;
-  login: (email: string) => void;
+  login: (username: string) => void;
   logout: () => void;
 }
 

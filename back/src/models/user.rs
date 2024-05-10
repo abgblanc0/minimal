@@ -6,7 +6,6 @@ use serde::{Deserialize, Serialize};
 #[diesel(table_name = users)]
 pub struct NewUser<'a> {
     pub username: &'a str,
-    pub email: &'a str,
     pub password: &'a str,
 }
 
@@ -14,7 +13,6 @@ pub struct NewUser<'a> {
 #[diesel(table_name = users)]
 pub struct AuxUser<'a> {
     pub username: Option<&'a str>,
-    pub email: Option<&'a str>,
     pub password: Option<&'a str>,
 }
 
@@ -24,6 +22,5 @@ pub struct User {
     pub id: i32,
     pub ctime: Option<chrono::NaiveDateTime>,
     pub username: String,
-    pub email: String,
     pub password: String,
 }

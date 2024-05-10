@@ -13,7 +13,8 @@ pub struct NewTopic<'a> {
 #[derive(Queryable, Debug, Serialize, Identifiable, Deserialize)]
 #[diesel(table_name = topics)]
 pub struct Topic {
-    id: i32,
-    name: String,
-    parent: Option<String>
+    pub id: i32,
+    pub ctime: Option<chrono::NaiveDateTime>,
+    pub name: String,
+    pub parent: Option<String>
 }

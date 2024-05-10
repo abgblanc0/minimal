@@ -16,6 +16,7 @@ diesel::table! {
 diesel::table! {
     topics (id) {
         id -> Int4,
+        ctime -> Nullable<Timestamptz>,
         #[max_length = 255]
         name -> Varchar,
         #[max_length = 255]
@@ -29,8 +30,6 @@ diesel::table! {
         ctime -> Nullable<Timestamptz>,
         #[max_length = 100]
         username -> Varchar,
-        #[max_length = 255]
-        email -> Varchar,
         #[max_length = 64]
         password -> Bpchar,
     }

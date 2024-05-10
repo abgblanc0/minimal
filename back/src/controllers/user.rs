@@ -8,7 +8,7 @@ type MyResult<T> = Result<T, diesel::result::Error>;
 
 pub fn check_user(conn: &mut PgConnection, user: AuxUser) -> MyResult<User> {
     users
-        .filter(email.eq(user.email.unwrap_or("")))
+        .filter(username.eq(user.username.unwrap_or("")))
         .filter(password.eq(user.password.unwrap_or("")))
         .get_result(conn)
 }

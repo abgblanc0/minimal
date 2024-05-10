@@ -1,9 +1,11 @@
 import { Post, User, Directory, Topic } from "../types";
 
+
 export const home: Directory = {
-  name: "home",
-  directorys: [{ name: "topics" }],
+  name: "~",
+  directorys: []
 };
+
 const commands = [
   "whoami",
   "ls",
@@ -14,6 +16,7 @@ const commands = [
   "keys",
   "cat",
 ];
+
 export default async function handleCommand(
   command: string,
   args: string[],
@@ -23,6 +26,7 @@ export default async function handleCommand(
   logout: () => void,
   user?: User
 ): Promise<string[]> {
+  args = mergeStringsBetweenQuotes(args)
   switch (command) {
     case "whoami":
       return whoami(user);
@@ -71,17 +75,17 @@ async function cd(
 
 export async function fetchDir(dir: Directory) {
   let aux = "";
-  if(dir.name === "topics"){
-    aux = "/topics"
+  if (dir.name === "topics") {
+    aux = "/topics";
     const response = await fetch(`http://localhost:8000${aux}`);
     const data: Topic[] = await response.json();
     let dirs: Directory[] = [];
-    data.forEach(topic => {
-      dirs.push({parent: dir, name: topic.name})
-    })
+    data.forEach((topic) => {
+      dirs.push({ parent: dir, name: topic.name });
+    });
     dir.directorys = dirs;
   }
-  if(dir.parent && dir.parent.name === "topics"){
+  if (dir.parent && dir.parent.name === "topics") {
     aux = `/topics/${dir.name}`;
     const response = await fetch(`http://localhost:8000${aux}`);
     const data: Post[] = await response.json();
@@ -114,15 +118,15 @@ async function ls(dir: Directory) {
 }
 
 //TODO: find way to do a good form terminal way, using prompts for now
-async function handleLogin(login: (email: string) => void) {
-  const email = prompt("Email: ");
+async function handleLogin(login: (username: string) => void) {
+  const username = prompt("Username: ");
   const password = prompt("Password: ");
   const response = await fetch("http://localhost:8000/users/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ email: email, password: password }),
+    body: JSON.stringify({ username: username, password: password }),
   });
   const user: User = await response.json();
   if (response.ok) {
@@ -141,15 +145,39 @@ function handleLogout(logout: any, user?: User) {
 
 async function cat(args: string, dir: Directory) {
   let uri = "";
-  dir.files?.forEach(file => {
-    if(file.name == args){
+  dir.files?.forEach((file) => {
+    if (file.name == args) {
       uri = `/posts/${file.id}`;
     }
-  })
-  if(uri){
+  });
+  if (uri) {
     const response = await fetch(`http://localhost:8000${uri}`);
-    const data:Post = await response.json();
-    return [data.name, data.body, "user: "+data.user_id];
+    const data: Post = await response.json();
+    return [data.name, data.body, "user: " + data.user_id];
   }
   return [""];
+}
+
+function mergeStringsBetweenQuotes(arr: string[]): string[] {
+  const result: string[] = [];
+  let currentString: string = "";
+  let insideQuotes: boolean = false;
+  
+  for (const string of arr) {
+      if (string.startsWith('"')) {
+          insideQuotes = true;
+          currentString += string.slice(1);
+      } else if (string.endsWith('"')) {
+          insideQuotes = false;
+          currentString += " " + string.slice(0, -1);
+          result.push(currentString);
+          currentString = "";
+      } else if (insideQuotes) {
+          currentString += " " + string;
+      } else {
+          result.push(string);
+      }
+  }
+  
+  return result;
 }

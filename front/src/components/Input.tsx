@@ -10,7 +10,7 @@ type InputProps = {
   setDir: (dir: Directory) => void;
   history: Command[];
   setHistory: (newHistory: Command[]) => void;
-  user?: User
+  user?: User;
 };
 
 export default function Input({
@@ -20,33 +20,33 @@ export default function Input({
   setDir,
   history,
   setHistory,
-  user
+  user,
 }: InputProps) {
   const { login, logout } = useAuth();
   const [input, setInput] = useState("");
-
   const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
   }, []);
+
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value);
   };
   const handleKeyDown = async (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.ctrlKey) {
-        if(event.key == "Enter"){
-            setTerminals(terminals + 1);
-        }
-        if(event.key == "e") {
-            event.preventDefault();
-            setTerminals(terminals - 1);
-        }
-        if(event.key == "l"){
-            event.preventDefault();
-            setHistory([]);
-        }
+      if (event.key == "Enter") {
+        setTerminals(terminals + 1);
+      }
+      if (event.key == "e") {
+        event.preventDefault();
+        setTerminals(terminals - 1);
+      }
+      if (event.key == "l") {
+        event.preventDefault();
+        setHistory([]);
+      }
     } else {
       if (event.key == "Enter") {
         const [command, ...args] = input.split(" ");
@@ -59,18 +59,28 @@ export default function Input({
           logout,
           user
         );
-        setHistory([...history, { username: user?.username, dir: dir, command: `${command} ${args}`, outputs: output }]);
+        setHistory([
+          ...history,
+          {
+            username: user?.username,
+            dir: dir,
+            command: `${command} ${args.join(" ")}`,
+            outputs: output,
+          },
+        ]);
         setInput("");
       }
     }
   };
   return (
-    <input
-      onKeyDown={handleKeyDown}
-      value={input}
-      ref={inputRef}
-      onChange={handleChange}
-      className="bg-transparent focus:outline-none flex-grow"
-    />
+    <div>
+      <input
+        onKeyDown={handleKeyDown}
+        value={input}
+        ref={inputRef}
+        onChange={handleChange}
+        className="bg-transparent focus:outline-none flex-grow"
+      />
+    </div>
   );
 }
