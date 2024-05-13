@@ -1,10 +1,5 @@
-import { Post, User, Directory, Topic } from "../types";
-
-
-export const home: Directory = {
-  name: "~",
-  directorys: []
-};
+import { home } from "../components/Terminal";
+import { Directory, User, Post, File } from "../models";
 
 const commands = [
   "whoami",
@@ -65,7 +60,7 @@ async function cd(
 ) {
   let ok: boolean = false;
   dir.directorys?.forEach((subdir) => {
-    if (subdir.name === args) {
+    if (subdir.dirname === args) {
       setDir(subdir);
       ok = true;
     }
@@ -82,23 +77,16 @@ async function cd(
 }
 
 export async function fetchDir(dir: Directory) {
-  let aux = "";
-  if (dir.name === "topics") {
-    aux = "/topics";
-    const response = await fetch(`http://localhost:8000${aux}`);
-    const data: Topic[] = await response.json();
-    let dirs: Directory[] = [];
-    data.forEach((topic) => {
-      dirs.push({ parent: dir, name: topic.name });
-    });
-    dir.directorys = dirs;
-  }
-  if (dir.parent && dir.parent.name === "topics") {
-    aux = `/topics/${dir.name}`;
-    const response = await fetch(`http://localhost:8000${aux}`);
-    const data: Post[] = await response.json();
-    dir.files = data;
-  }
+  const response = await fetch(`http://localhost:8000/directorys/${dir.id}`);
+  const data: Directory[] = await response.json();
+  data.forEach(aux => aux.parent = dir);
+  dir.directorys = data;
+}
+
+export async function fetchFiles(dir: Directory) {
+  const response = await fetch(`http://localhost:8000/directorys/files/${dir.id}`);
+  const data: File[] = await response.json();
+  dir.files = data;
 }
 
 function whoami(user?: User) {
@@ -117,10 +105,10 @@ async function ls(dir: Directory) {
   let output: string[] = [];
   console.log(dir);
   dir.directorys?.forEach((subdir) => {
-    output.push(subdir.name);
+    output.push(subdir.dirname);
   });
   dir.files?.forEach((file) => {
-    output.push(file.name);
+    output.push(file.filename);
   });
   return output;
 }
@@ -142,16 +130,16 @@ function handleLogout(logout: any, user?: User) {
 async function cat(args: string, dir: Directory) {
   let uri = "";
   dir.files?.forEach((file) => {
-    if (file.name == args) {
-      uri = `/posts/${file.id}`;
+    if (file.filename == args) {
+      uri = `/files/${file.id}`;
     }
   });
   if (uri) {
     const response = await fetch(`http://localhost:8000${uri}`);
-    const data: Post = await response.json();
-    return [data.name, data.body, "user: " + data.user_id];
+    const data: File = await response.json();
+    return [data.filename, data.content, "user: " + data.user_id];
   }
-  return [""];
+  return ["[cat error]: no such file"];
 }
 
 function mergeStringsBetweenQuotes(arr: string[]): string[] {

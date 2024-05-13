@@ -1,4 +1,4 @@
-import { Command } from "../types";
+import { Command } from "../models";
 import Prefix from "./Prefix";
 type HistoryProps = {
   history: Command[];

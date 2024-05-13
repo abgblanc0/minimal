@@ -2,22 +2,25 @@ import Input from "./Input";
 import Prefix from "./Prefix";
 import History from "./History";
 import { useEffect, useState } from "react";
-import { Command, Directory, User } from "../types";
 import { useAuth } from "./AuthProvider";
-import { fetchDir, home } from "../utils/commands";
+import { fetchDir, fetchFiles} from "../utils/commands";
 import Form from "./Form";
+import { Command, Directory, User } from "../models";
+
 
 interface TerminalProps {
   terminals: number;
   setTerminals: (terminals: number) => void;
 }
 
-const topics: Directory = {
-  name: "topics",
-  parent: home,
-};
-
-home.directorys?.push(topics);
+export const home : Directory = {
+  ctime: "",
+  dirname: "~",
+  id: 1,
+  username: "root",
+  directorys: [],
+  files: []
+}
 
 export default function Terminal({ terminals, setTerminals }: TerminalProps) {
   const { user, login } = useAuth();
@@ -28,8 +31,14 @@ export default function Terminal({ terminals, setTerminals }: TerminalProps) {
   const [type, setType] = useState("");
 
   useEffect(() => {
-    if (dir.name !== "home") {
+    fetchDir(home);
+    fetchFiles(home);
+  }, []);
+
+  useEffect(() => {
+    if (dir?.dirname !== "home") {
       fetchDir(dir);
+      fetchFiles(dir);
     }
   }, [dir]);
 

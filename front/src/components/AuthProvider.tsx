@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
-import { User } from "../types";
+import { User } from "../models";
 
 // Definimos el tipo para el contexto de autenticación
 interface AuthContextType {
