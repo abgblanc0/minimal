@@ -1,5 +1,5 @@
 import { home } from "../components/Terminal";
-import { Directory, User, Post, File } from "../models";
+import { Directory, User, File } from "../models";
 
 const commands = [
   "whoami",

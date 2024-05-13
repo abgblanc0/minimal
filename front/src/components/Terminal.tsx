@@ -17,9 +17,7 @@ export const home : Directory = {
   ctime: "",
   dirname: "~",
   id: 1,
-  username: "root",
-  directorys: [],
-  files: []
+  username: "root"
 }
 
 export default function Terminal({ terminals, setTerminals }: TerminalProps) {
@@ -63,6 +61,7 @@ export default function Terminal({ terminals, setTerminals }: TerminalProps) {
     };
     handleLogin();
   }, [labels]);
+
   return (
     <div
       className={`p-5 grow h-[95%] w-[95%] text-white bg-black/60 border-2 rounded-xl focus:outline-none resize-none overflow-auto`}

@@ -1,17 +1,7 @@
 
-export interface Post {
-    id: number;
-    ctime: number;
-    name: string;
-    body: string;
-    user_id: number;
-    topic: string;
-}
-
 export interface User {
     username: string;
 }
-
 
 export interface Directory {
     id: number;

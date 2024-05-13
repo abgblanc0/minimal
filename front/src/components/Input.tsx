@@ -1,9 +1,7 @@
 import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import handleCommand from "../utils/commands";
 import { useAuth } from "./AuthProvider";
-import { Command } from "../models";
-import { Directory } from "../models/directory";
-import { User } from "../models/user";
+import { Command, Directory, User } from "../models";
 
 type InputProps = {
   setType: (type: string) => void;
