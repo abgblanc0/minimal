@@ -30,21 +30,22 @@ fn rocket() -> _ {
             ],
         )
         .mount(
-            "/posts",
+            "/files",
             routes![
-                routes::post::posts,
-                routes::post::post_by_id,
-                routes::post::post_post,
-                routes::post::patch_post,
-                routes::post::delete_post,
+                routes::file::files,
+                routes::file::file_by_id,
+                routes::file::post_file,
+                routes::file::patch_file,
+                routes::file::delete_file,
             ],
         )
         .mount(
-            "/topics",
+            "/directorys",
             routes![
-                routes::topic::topics,
-                routes::topic::posts,
-                routes::topic::post_by_topic
+                routes::directory::directorys,
+                routes::directory::files,
+                routes::directory::file_by_dir,
+                routes::directory::subdirs
             ],
         )
 }

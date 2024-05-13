@@ -1,26 +1,26 @@
 // @generated automatically by Diesel CLI.
 
 diesel::table! {
-    posts (id) {
+    directory (id) {
         id -> Int4,
         ctime -> Nullable<Timestamptz>,
         #[max_length = 255]
-        name -> Varchar,
-        content -> Text,
-        user_id -> Int4,
-        #[max_length = 255]
-        topic -> Nullable<Varchar>,
+        dirname -> Varchar,
+        #[max_length = 100]
+        username -> Nullable<Varchar>,
+        parent_id -> Nullable<Int4>,
     }
 }
 
 diesel::table! {
-    topics (id) {
+    file (id) {
         id -> Int4,
         ctime -> Nullable<Timestamptz>,
         #[max_length = 255]
-        name -> Varchar,
-        #[max_length = 255]
-        parent -> Nullable<Varchar>,
+        filename -> Varchar,
+        content -> Text,
+        user_id -> Int4,
+        directory_id -> Int4,
     }
 }
 
@@ -31,14 +31,16 @@ diesel::table! {
         #[max_length = 100]
         username -> Varchar,
         #[max_length = 64]
-        password -> Bpchar,
+        password -> Varchar,
+        root -> Bool,
     }
 }
 
-diesel::joinable!(posts -> users (user_id));
+diesel::joinable!(file -> directory (directory_id));
+diesel::joinable!(file -> users (user_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
-    posts,
-    topics,
+    directory,
+    file,
     users,
 );

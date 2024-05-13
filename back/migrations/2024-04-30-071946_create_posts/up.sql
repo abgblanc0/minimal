@@ -1,36 +1,35 @@
 -- Your SQL goes here
-CREATE TABLE topics (
+-- Crear la tabla
+CREATE TABLE directory (
     id SERIAL PRIMARY KEY,
     ctime TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    name VARCHAR(255) NOT NULL UNIQUE,
-    parent VARCHAR(255) REFERENCES topics(name) ON DELETE CASCADE
+    dirname VARCHAR(255) NOT NULL,
+    username VARCHAR(100) DEFAULT 'root',
+    parent_id INT REFERENCES directory(id) ON DELETE CASCADE
 );
 
+INSERT INTO directory (dirname) 
+VALUES ('/');
 
-CREATE TABLE posts (
+CREATE TABLE file (
     id SERIAL PRIMARY KEY,
     ctime TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    name VARCHAR(255) NOT NULL,
+    filename VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
     user_id INT REFERENCES users(id) ON DELETE CASCADE NOT NULL,
-    topic VARCHAR(255) DEFAULT 'misc' REFERENCES topics(name),
-    UNIQUE (name, topic)
+    directory_id INT REFERENCES directory(id) ON DELETE CASCADE NOT NULL,
+    UNIQUE (filename, directory_id)
 );
 
-INSERT INTO topics (name)
-VALUES ('misc');
-
 -- Insertar un post para cada usuario
-INSERT INTO posts (name, content, user_id)
+INSERT INTO file (filename, content, user_id, directory_id)
 SELECT 
     CONCAT('Post de ', u.username),
     CONCAT('Contenido del post de ', u.username),
-    u.id
+    u.id,
+    1
 FROM 
     users u;
 
-INSERT INTO posts (name, content, user_id) 
-VALUES ('Hola', 'Este es un post de ejemplo', 1);
-
-INSERT INTO topics (name)
-VALUES ('juegos');
+INSERT INTO file (filename, content, user_id, directory_id) 
+VALUES ('Hola', 'Este es un post de ejemplo', 1, 1);

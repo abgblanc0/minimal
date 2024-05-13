@@ -1,31 +1,31 @@
-use crate::schema::posts;
+use crate::schema::file;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(Insertable, Deserialize)]
-#[diesel(table_name = posts)]
-pub struct NewPost<'a> {
+#[diesel(table_name = file)]
+pub struct NewFile<'a> {
     pub user_id: i32,
-    pub name: &'a str,
+    pub filename: &'a str,
     pub content: &'a str,
-    pub topic: Option<&'a str>,
+    pub directory_id: Option<i32>,
 }
 
 #[derive(AsChangeset, Deserialize)]
-#[diesel(table_name = posts)]
-pub struct UpdatePost<'a> {
-    pub name: Option<&'a str>,
+#[diesel(table_name = file)]
+pub struct UpdateFile<'a> {
+    pub filename: Option<&'a str>,
     pub content: Option<&'a str>,
-    pub topic: Option<&'a str>,
+    pub directory_id: Option<i32>,
 }
 
 #[derive(Queryable, Debug, Serialize, Identifiable, Deserialize)]
-#[diesel(table_name = posts)]
-pub struct Post {
+#[diesel(table_name = file)]
+pub struct File {
     pub id: i32,
     pub ctime: Option<chrono::NaiveDateTime>,
-    pub name: String,
+    pub filename: String,
     pub content: String,
     pub user_id: i32,
-    pub topic: Option<String>,
+    pub directory_id: i32,
 }
