@@ -45,12 +45,19 @@ export default async function handleCommand(
       return handleLogout(logout, user);
     case "keys":
       return keys();
+    case "touch":
+      return touch(args);
     case "":
       return [""];
     default:
       return [`${command}: command not found`];
   }
 }
+
+function touch(args: string[]) {
+  return [""];
+}
+
 async function cd(
   args: string,
   dir: Directory,
