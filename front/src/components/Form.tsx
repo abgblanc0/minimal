@@ -1,15 +1,24 @@
-import { KeyboardEvent, useRef, useState } from "react";
+import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 
 interface Props {
   labels: string[];
   setLabels: (asd: string[]) => void;
+  data: FormData;
 }
-export default function Form({ labels, setLabels }: Props) {
+export default function Form({labels, setLabels, data }: Props) {
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setInput(event.target.value);
+  };
   const handleKeyDown = async (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
-      console.log(labels);
+      data.set(labels[0].trim().toLocaleLowerCase().slice(0,-1), input);
       setLabels(labels?.slice(1));
       setInput("");
     }
@@ -18,6 +27,7 @@ export default function Form({ labels, setLabels }: Props) {
     <div>
       <label>{labels[0]}</label>
       <input
+        onChange={handleChange}
         value={input}
         ref={inputRef}
         onKeyDown={handleKeyDown}

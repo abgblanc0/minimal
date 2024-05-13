@@ -20,10 +20,11 @@ const commands = [
 export default async function handleCommand(
   command: string,
   args: string[],
+  setLabels: (labels: string[]) => void,
   dir: Directory,
   setDir: (dir: Directory) => void,
-  login: (email: string) => void,
   logout: () => void,
+  setType: (type: string) => void,
   user?: User
 ): Promise<string[]> {
   args = mergeStringsBetweenQuotes(args)
@@ -39,7 +40,7 @@ export default async function handleCommand(
     case "cat":
       return cat(args[0], dir);
     case "login":
-      return handleLogin(login);
+      return handleLogin(setLabels, setType);
     case "logout":
       return handleLogout(logout, user);
     case "keys":
@@ -117,22 +118,10 @@ async function ls(dir: Directory) {
   return output;
 }
 
-//TODO: find way to do a good form terminal way, using prompts for now
-async function handleLogin(login: (username: string) => void) {
-  const username = prompt("Username: ");
-  const password = prompt("Password: ");
-  const response = await fetch("http://localhost:8000/users/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ username: username, password: password }),
-  });
-  const user: User = await response.json();
-  if (response.ok) {
-    login(user.username);
-  }
-  return response.ok ? ["OK"] : ["OKN'T"];
+async function handleLogin(setLabels: (labels: string[]) => void, setType: (type: string) => void) {
+  setLabels(["Username: ", "Password: "]);
+  setType("login");
+ return [""];
 }
 
 function handleLogout(logout: any, user?: User) {

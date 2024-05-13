@@ -4,8 +4,10 @@ import { useAuth } from "./AuthProvider";
 import { Command, Directory, User } from "../types";
 
 type InputProps = {
+  setType: (type: string) => void;
   terminals: number;
   setTerminals: (terminals: number) => void;
+  setLabels: (labels: string[]) => void;
   dir: Directory;
   setDir: (dir: Directory) => void;
   history: Command[];
@@ -14,15 +16,17 @@ type InputProps = {
 };
 
 export default function Input({
+  setType,
   terminals,
   setTerminals,
+  setLabels,
   dir,
   setDir,
   history,
   setHistory,
   user,
 }: InputProps) {
-  const { login, logout } = useAuth();
+  const { logout } = useAuth();
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
@@ -53,10 +57,11 @@ export default function Input({
         const output = await handleCommand(
           command,
           args,
+          setLabels,
           dir,
           setDir,
-          login,
           logout,
+          setType,
           user
         );
         setHistory([
