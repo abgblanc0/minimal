@@ -20,7 +20,7 @@ fn rocket() -> _ {
             "/users",
             routes![
                 routes::user::users,
-                routes::user::posts_by_user_id,
+                routes::user::files_by_user_id,
                 routes::user::user_by_id,
                 routes::user::post_user,
                 routes::user::patch_user,

@@ -19,7 +19,7 @@ pub fn directorys(pool: &State<PgPool>) -> Result<Json<Vec<Directory>>, MyError>
     }
 }
 
-#[get("/<input>")]
+#[get("/files/<input>")]
 pub fn files(pool: &State<PgPool>, input: i32) -> Result<Json<Vec<File>>, MyError>{
     let mut conn = pool.get().expect("Fail to conn");
     match get_files_by_dir(&mut conn, input) {

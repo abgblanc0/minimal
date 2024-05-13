@@ -28,8 +28,8 @@ pub fn user_by_id(pool:&State<PgPool>, user_id: i32) -> Result<Json<User>, MyErr
     }
 }
 
-#[get("/<other_user_id>/posts")]
-pub fn posts_by_user_id(pool: &State<PgPool>, other_user_id: i32) -> Result<Json<Vec<File>>, MyError> {
+#[get("/<other_user_id>/files")]
+pub fn files_by_user_id(pool: &State<PgPool>, other_user_id: i32) -> Result<Json<Vec<File>>, MyError> {
     let mut conn = pool.get().expect("Fail to conn");
     match get_files_by_user_id(&mut conn, other_user_id) {
         Ok(posts) => Ok(Json(posts)),
