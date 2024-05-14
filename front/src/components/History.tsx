@@ -16,7 +16,11 @@ export default function History({ history }: HistoryProps) {
           </div>
 
           {command.outputs.map((out, index) => (
-            <p key={index}>{out}</p>
+            <div className="flex gap-5" key={index}>
+              {out.split(" ").map((word,index) => (
+                <p key={index}>{word}</p>
+              ))}
+            </div>
           ))}
         </div>
       ))}

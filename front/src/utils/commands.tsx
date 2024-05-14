@@ -40,17 +40,11 @@ export default async function handleCommand(
       return handleLogout(logout, user);
     case "keys":
       return keys();
-    case "touch":
-      return touch(args);
     case "":
       return [""];
     default:
       return [`${command}: command not found`];
   }
-}
-
-function touch(args: string[]) {
-  return [""];
 }
 
 async function cd(
@@ -76,19 +70,6 @@ async function cd(
   return [ok ? "" : `cd: no such file or directory: ${args}`];
 }
 
-export async function fetchDir(dir: Directory) {
-  const response = await fetch(`http://localhost:8000/directorys/${dir.id}`);
-  const data: Directory[] = await response.json();
-  data.forEach(aux => aux.parent = dir);
-  dir.directorys = data;
-}
-
-export async function fetchFiles(dir: Directory) {
-  const response = await fetch(`http://localhost:8000/directorys/files/${dir.id}`);
-  const data: File[] = await response.json();
-  dir.files = data;
-}
-
 function whoami(user?: User) {
   return [user ? user.username : "guest"];
 }
@@ -105,10 +86,10 @@ async function ls(dir: Directory) {
   let output: string[] = [];
   console.log(dir);
   dir.directorys?.forEach((subdir) => {
-    output.push(subdir.dirname);
+    output.push(`drwx-x--x- ${dir.username} ${subdir.dirname}`);
   });
   dir.files?.forEach((file) => {
-    output.push(file.filename);
+    output.push(`.rwx-r--r-- ${file.user_id} ${file.filename}`);
   });
   return output;
 }
@@ -116,7 +97,7 @@ async function ls(dir: Directory) {
 async function handleLogin(setLabels: (labels: string[]) => void, setType: (type: string) => void) {
   setLabels(["Username: ", "Password: "]);
   setType("login");
- return [""];
+  return [""];
 }
 
 function handleLogout(logout: any, user?: User) {

@@ -3,7 +3,7 @@ import handleCommand from "../utils/commands";
 import { useAuth } from "./AuthProvider";
 import { Command, Directory, User } from "../models";
 
-type InputProps = {
+interface InputProps {
   setType: (type: string) => void;
   terminals: number;
   setTerminals: (terminals: number) => void;
