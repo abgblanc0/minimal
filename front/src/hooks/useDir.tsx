@@ -14,6 +14,6 @@ const useDir = async (dir: Directory) => {
           fetchDir(dir);
           fetchFiles(dir);
         }
-      }, [dir]);
+      }, [dir, dir.directorys]);
 }
 export default useDir;

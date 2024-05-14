@@ -6,7 +6,7 @@ diesel::table! {
         ctime -> Nullable<Timestamptz>,
         #[max_length = 255]
         dirname -> Varchar,
-        #[max_length = 100]
+        #[max_length = 32]
         username -> Nullable<Varchar>,
         parent_id -> Nullable<Int4>,
     }
@@ -19,7 +19,8 @@ diesel::table! {
         #[max_length = 255]
         filename -> Varchar,
         content -> Text,
-        user_id -> Int4,
+        #[max_length = 32]
+        username -> Nullable<Varchar>,
         directory_id -> Int4,
     }
 }
@@ -37,7 +38,6 @@ diesel::table! {
 }
 
 diesel::joinable!(file -> directory (directory_id));
-diesel::joinable!(file -> users (user_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
     directory,

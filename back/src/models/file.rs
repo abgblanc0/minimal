@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Insertable, Deserialize)]
 #[diesel(table_name = file)]
 pub struct NewFile<'a> {
-    pub user_id: i32,
+    pub username: Option<&'a str>,
     pub filename: &'a str,
     pub content: &'a str,
     pub directory_id: Option<i32>,
@@ -17,6 +17,7 @@ pub struct UpdateFile<'a> {
     pub filename: Option<&'a str>,
     pub content: Option<&'a str>,
     pub directory_id: Option<i32>,
+    pub username: Option<&'a str>
 }
 
 #[derive(Queryable, Debug, Serialize, Identifiable, Deserialize)]
@@ -26,6 +27,6 @@ pub struct File {
     pub ctime: Option<chrono::NaiveDateTime>,
     pub filename: String,
     pub content: String,
-    pub user_id: i32,
-    pub directory_id: i32,
+    pub username: Option<String>,
+    pub directory_id: i32
 }

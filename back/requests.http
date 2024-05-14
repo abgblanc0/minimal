@@ -7,8 +7,8 @@ POST  http://localhost:8000/users/login HTTP/1.1
 content-type: application/json
 
 {
-    "email": "abgblanco@hotmail.com",
-    "password": "asdasdasd"
+    "username": "abgblanco",
+    "password": "asd"
 }
 ###
 
@@ -17,8 +17,7 @@ content-type: application/json
 
 {
     "username": "abgblanco",
-    "email": "abgblanco@hotmail.com",
-    "password": "asdasdasd"
+    "password": "asd"
 }
 ###
 PATCH http://localhost:8000/users/2 HTTP/1.1

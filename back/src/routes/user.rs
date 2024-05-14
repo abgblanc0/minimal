@@ -28,10 +28,10 @@ pub fn user_by_id(pool:&State<PgPool>, user_id: i32) -> Result<Json<User>, MyErr
     }
 }
 
-#[get("/<other_user_id>/files")]
-pub fn files_by_user_id(pool: &State<PgPool>, other_user_id: i32) -> Result<Json<Vec<File>>, MyError> {
+#[get("/<other>/files")]
+pub fn files_by_username(pool: &State<PgPool>, other: &str) -> Result<Json<Vec<File>>, MyError> {
     let mut conn = pool.get().expect("Fail to conn");
-    match get_files_by_user_id(&mut conn, other_user_id) {
+    match get_files_by_user_id(&mut conn, other) {
         Ok(posts) => Ok(Json(posts)),
         Err(error) => Err(MyError::build(400, Some(error.to_string())))
     }
@@ -72,10 +72,3 @@ pub fn verify_user(pool: &State<PgPool>, input: Json<AuxUser>) -> Result<Json<Us
         Err(error) => Err(MyError::build(400, Some(error.to_string())))
     }
 }
-
-// I DONT LIKE THIS
-#[options("/login")]
-pub fn options_login() -> &'static str {
-    "OK"
-}
-

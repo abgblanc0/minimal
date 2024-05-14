@@ -13,6 +13,12 @@ export interface Directory {
     files?: File[];
 }
 
+export interface NewDirectory {
+    dirname: string;
+    username?: string;
+    parent_id: number;
+}
+
 export interface Command {
     username: string | undefined;
     dir: Directory;
@@ -25,6 +31,6 @@ export interface File {
     ctime: string;
     filename: string;
     content: string;
-    user_id: number;
+    username: string;
     directory_id: number;
 }

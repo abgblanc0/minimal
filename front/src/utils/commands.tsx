@@ -1,5 +1,5 @@
 import { home } from "../components/Terminal";
-import { Directory, User, File } from "../models";
+import { Directory, User, File, NewDirectory } from "../models";
 
 const commands = [
   "whoami",
@@ -30,6 +30,10 @@ export default async function handleCommand(
       return ls(dir);
     case "cd":
       return cd(args[0], dir, setDir);
+    case "mkdir":
+      return mkdir(args[0], dir, user)
+    case "rmdir":
+      return rmdir(args[0], dir)
     case "help":
       return commands;
     case "cat":
@@ -45,6 +49,33 @@ export default async function handleCommand(
     default:
       return [`${command}: command not found`];
   }
+}
+
+async function rmdir(args: string, dir: Directory) {
+  let id;
+  dir.directorys?.forEach(subdir => {
+    if(args === subdir.dirname) {
+      id = subdir.id;
+    }
+  })
+  const response = await fetch(`http://localhost:8000/directorys/${id}`, {method: "DELETE"})
+  return response.ok ? ["OK"] : ["NO OK"];
+}
+
+async function mkdir(args: string, parent: Directory, user?: User) {
+  const new_dir: NewDirectory = {
+    dirname: args,
+    parent_id: parent.id,
+    username: user? user.username : "guest"
+  }
+  const response = await fetch("http://localhost:8000/directorys", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(new_dir)
+  });
+  return response.ok ? ["OK"] : ["NO OK"];
 }
 
 async function cd(
@@ -67,7 +98,7 @@ async function cd(
     setDir(home);
     ok = true;
   }
-  return [ok ? "" : `cd: no such file or directory: ${args}`];
+  return [ok ? "" : `cd: no such directory: ${args}`];
 }
 
 function whoami(user?: User) {
@@ -86,10 +117,10 @@ async function ls(dir: Directory) {
   let output: string[] = [];
   console.log(dir);
   dir.directorys?.forEach((subdir) => {
-    output.push(`drwx-x--x- ${dir.username} ${subdir.dirname}`);
+    output.push(`drwx-x--x- ${subdir.username} ${subdir.dirname}`);
   });
   dir.files?.forEach((file) => {
-    output.push(`.rwx-r--r-- ${file.user_id} ${file.filename}`);
+    output.push(`.rwx-r--r-- ${file.username} ${file.filename}`);
   });
   return output;
 }
@@ -118,7 +149,7 @@ async function cat(args: string, dir: Directory) {
   if (uri) {
     const response = await fetch(`http://localhost:8000${uri}`);
     const data: File = await response.json();
-    return [data.filename, data.content, "user: " + data.user_id];
+    return [data.filename, data.content, "user: " + data.username];
   }
   return ["[cat error]: no such file"];
 }

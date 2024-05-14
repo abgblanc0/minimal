@@ -4,7 +4,7 @@ CREATE TABLE directory (
     id SERIAL PRIMARY KEY,
     ctime TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     dirname VARCHAR(255) NOT NULL,
-    username VARCHAR(100) DEFAULT 'root',
+    username VARCHAR(32) DEFAULT 'root',
     parent_id INT REFERENCES directory(id) ON DELETE CASCADE
 );
 
@@ -23,20 +23,20 @@ CREATE TABLE file (
     ctime TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     filename VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
-    user_id INT REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+    username VARCHAR(32) DEFAULT 'guest',
     directory_id INT REFERENCES directory(id) ON DELETE CASCADE NOT NULL,
     UNIQUE (filename, directory_id)
 );
 
 -- Insertar un post para cada usuario
-INSERT INTO file (filename, content, user_id, directory_id)
+INSERT INTO file (filename, content, username, directory_id)
 SELECT 
     CONCAT('Post de ', u.username),
     CONCAT('Contenido del post de ', u.username),
-    u.id,
+    u.username,
     3
 FROM 
     users u;
 
-INSERT INTO file (filename, content, user_id, directory_id) 
-VALUES ('Hola', 'Este es un post de ejemplo', 1, 2);
+INSERT INTO file (filename, content, username, directory_id) 
+VALUES ('Hola', 'Este es un post de ejemplo', 'asd', 2);

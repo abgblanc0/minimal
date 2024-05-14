@@ -23,7 +23,6 @@ export const home: Directory = {
 export default function Terminal({ terminals, setTerminals }: TerminalProps) {
   const { user, login } = useAuth();
   const {data, dir, setDir, history, setHistory, labels, setLabels, type, setType} = useTerminalState();
-
   useDir(dir);
   useLabels({data, dir, history, setHistory, labels, login, type}); // idk maybe wrong, react... >.<
 

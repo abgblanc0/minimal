@@ -38,6 +38,15 @@ pub fn subdirs(pool: &State<PgPool>, dir: i32) -> Result<Json<Vec<Directory>>, M
     
 }
 
+#[delete("/<dir>")]
+pub fn delete_dir(pool: &State<PgPool>, dir: i32) -> Result<&str, MyError>{
+    let mut conn = pool.get().expect("Fail to conn");
+    match erase_directory(&mut conn, dir) {
+        Ok(_) => Ok("Ok"),
+        Err(error) => Err(MyError::build(400, Some(error.to_string())))
+    }
+}
+
 #[get("/<dir>/<file>")]
 pub fn file_by_dir(pool: &State<PgPool>, dir: i32, file: &str) -> Result<Json<File>, MyError> {
     let mut conn = pool.get().expect("Fail to conn");

@@ -13,8 +13,8 @@ pub fn get_file_by_id(conn: &mut PgConnection, other: i32) -> MyResult<File> {
     file.find(other).get_result(conn)
 }
 
-pub fn get_files_by_user_id(conn: &mut PgConnection, other: i32) -> MyResult<Vec<File>> {
-    file.filter(user_id.eq(other)).get_results(conn)
+pub fn get_files_by_user_id(conn: &mut PgConnection, other: &str) -> MyResult<Vec<File>> {
+    file.filter(username.eq(other)).get_results(conn)
 }
 
 pub fn get_files_by_dir(conn: &mut PgConnection, other: i32) -> MyResult<Vec<File>> {
