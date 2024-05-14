@@ -45,7 +45,8 @@ fn rocket() -> _ {
                 routes::directory::directorys,
                 routes::directory::files,
                 routes::directory::file_by_dir,
-                routes::directory::subdirs
+                routes::directory::subdirs,
+                routes::directory::post_dir
             ],
         )
 }

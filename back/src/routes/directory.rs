@@ -46,3 +46,12 @@ pub fn file_by_dir(pool: &State<PgPool>, dir: i32, file: &str) -> Result<Json<Fi
         Err(error) => Err(MyError::build(400, Some(error.to_string())))
     }
 }
+
+#[post("/", data = "<dir>")]
+pub fn post_dir(pool: &State<PgPool>, dir: Json<NewDirectory>) -> Result<Json<Directory>, MyError>{
+    let mut conn = pool.get().expect("Fail to conn");
+    match create_directory(&mut conn, dir.into_inner()) {
+        Ok(d) => Ok(Json(d)),
+        Err(error) => Err(MyError::build(400, Some(error.to_string())))
+    }
+}
