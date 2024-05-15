@@ -15,9 +15,13 @@ export default function History({ history }: HistoryProps) {
             <p className="ml-2">{command.command}</p>
           </div>
 
-          {command.outputs.map((out, index) => (
-            <p key={index}>{out}</p>
-          ))}
+          <div>
+            {command.outputs.map((out, index) => (
+              <p className="whitespace-pre" key={index}>
+                {out}
+              </p>
+            ))}
+          </div>
         </div>
       ))}
     </div>

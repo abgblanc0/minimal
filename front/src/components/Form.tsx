@@ -18,7 +18,7 @@ export default function Form({labels, setLabels, data }: Props) {
   };
   const handleKeyDown = async (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
-      data.set(labels[0].trim().toLocaleLowerCase().slice(0,-1), input);
+      data.set(labels[0].trim().slice(0,-1), input);
       setLabels(labels?.slice(1));
       setInput("");
     }

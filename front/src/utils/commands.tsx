@@ -22,7 +22,7 @@ export default async function handleCommand(
   setType: (type: string) => void,
   user?: User
 ): Promise<string[]> {
-  args = mergeStringsBetweenQuotes(args)
+  args = mergeStringsBetweenQuotes(args);
   switch (command) {
     case "whoami":
       return whoami(user);
@@ -31,9 +31,9 @@ export default async function handleCommand(
     case "cd":
       return cd(args[0], dir, setDir);
     case "mkdir":
-      return mkdir(args[0], dir, user)
+      return mkdir(args[0], dir, user);
     case "rmdir":
-      return rmdir(args[0], dir)
+      return rmdir(args[0], dir, user);
     case "help":
       return commands;
     case "cat":
@@ -42,8 +42,12 @@ export default async function handleCommand(
       return handleLogin(setLabels, setType);
     case "logout":
       return handleLogout(logout, user);
+    case "register":
+      return register(setLabels, setType);
     case "keys":
       return keys();
+    case "flowetch":
+      return ['🌹'];
     case "":
       return [""];
     default:
@@ -51,29 +55,52 @@ export default async function handleCommand(
   }
 }
 
-async function rmdir(args: string, dir: Directory) {
-  let id;
-  dir.directorys?.forEach(subdir => {
-    if(args === subdir.dirname) {
-      id = subdir.id;
+function register(
+  setLabels: (label: string[]) => void,
+  setType: (type: string) => void
+) {
+  setLabels(["username: ", "password: "]);
+  setType("register");
+  return [""]
+}
+
+async function rmdir(dirname: string, dir: Directory, user?: User) {
+  let subDir: Directory | undefined;
+
+  for (const subdir of dir.directorys || []) {
+    if (dirname === subdir.dirname) {
+      subDir = subdir;
+      break;
     }
-  })
-  const response = await fetch(`http://localhost:8000/directorys/${id}`, {method: "DELETE"})
-  return response.ok ? ["OK"] : ["NO OK"];
+  }
+  if (!subDir)
+    return [`rmdir: Failed to remove '${dirname}': No such directory`];
+  if (subDir.username !== user?.username && user?.username !== "root")
+    return [`rmdir: Failed to remove '${dirname}': Permission denied`];
+
+  try {
+    const response = await fetch(
+      `http://localhost:8000/directorys/${subDir.id}`,
+      { method: "DELETE" }
+    );
+    return response.ok ? ["OK"] : ["NO OK"];
+  } catch (error) {
+    return ["ERROR"];
+  }
 }
 
 async function mkdir(args: string, parent: Directory, user?: User) {
   const new_dir: NewDirectory = {
     dirname: args,
     parent_id: parent.id,
-    username: user? user.username : "guest"
-  }
+    username: user ? user.username : "guest",
+  };
   const response = await fetch("http://localhost:8000/directorys", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(new_dir)
+    body: JSON.stringify(new_dir),
   });
   return response.ok ? ["OK"] : ["NO OK"];
 }
@@ -113,22 +140,24 @@ function keys() {
   ];
 }
 
-async function ls(dir: Directory) {
+function ls(dir: Directory) {
   let output: string[] = [];
-  console.log(dir);
   dir.directorys?.forEach((subdir) => {
     output.push(`drwx-x--x- ${subdir.username} ${subdir.dirname}`);
   });
   dir.files?.forEach((file) => {
-    output.push(`.rwx-r--r-- ${file.username} ${file.filename}`);
+    output.push(`.rwx-r-xr-- ${file.username} ${file.filename}`);
   });
   return output;
 }
 
-async function handleLogin(setLabels: (labels: string[]) => void, setType: (type: string) => void) {
-  setLabels(["Username: ", "Password: "]);
+async function handleLogin(
+  setLabels: (labels: string[]) => void,
+  setType: (type: string) => void
+) {
+  setLabels(["username: ", "password: "]);
   setType("login");
-  return [""];
+  return [""]
 }
 
 function handleLogout(logout: any, user?: User) {
@@ -158,22 +187,41 @@ function mergeStringsBetweenQuotes(arr: string[]): string[] {
   const result: string[] = [];
   let currentString: string = "";
   let insideQuotes: boolean = false;
-  
+
   for (const string of arr) {
-      if (string.startsWith('"')) {
-          insideQuotes = true;
-          currentString += string.slice(1);
-      } else if (string.endsWith('"')) {
-          insideQuotes = false;
-          currentString += " " + string.slice(0, -1);
-          result.push(currentString);
-          currentString = "";
-      } else if (insideQuotes) {
-          currentString += " " + string;
-      } else {
-          result.push(string);
-      }
+    if (string.startsWith('"')) {
+      insideQuotes = true;
+      currentString += string.slice(1);
+    } else if (string.endsWith('"')) {
+      insideQuotes = false;
+      currentString += " " + string.slice(0, -1);
+      result.push(currentString);
+      currentString = "";
+    } else if (insideQuotes) {
+      currentString += " " + string;
+    } else {
+      result.push(string);
+    }
   }
-  
+
   return result;
 }
+
+
+/*
+function flowetch(user?: User) {
+  const ARTR1 = "    _ _        ";
+  const ARTR2 = "  (_\\_)       ";
+  const ARTR3 = "  (__<__)      ";
+  const ARTR4 = "   (_/_)       ";
+  const ARTR5 = "  \\ |         ";
+  const ARTR6 = "   \\|/        ";
+  return [
+    `${ARTR1}  host  ...   minimal`,
+    `${ARTR2}  user  ...   ${user?.username}`,
+    `${ARTR3}  shell ...   zsh - >.<`,
+    `${ARTR4}  wm    ...   Hyprland`,
+    `${ARTR5}  theme ...   ¿#¿.-.-¿`,
+    `${ARTR6}  pkg   ...   -.¿?¿?;¿?`];
+}
+*/
