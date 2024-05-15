@@ -1,4 +1,4 @@
-import { Directory, File } from "../models";
+import { Directory, File, NewFile } from "../models";
 
 export async function fetchDir(dir: Directory) {
   const response = await fetch(`http://localhost:8000/directorys/${dir.id}`);
@@ -39,4 +39,14 @@ export async function fetchRegister(data: FormData) {
       password: data.get("password"),
     })
   });
+}
+
+export async function fetchFile(file: NewFile) {
+  return fetch("http://localhost:8000/files", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(file)
+  })
 }

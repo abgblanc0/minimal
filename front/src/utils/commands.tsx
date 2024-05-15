@@ -8,8 +8,17 @@ const commands = [
   "help",
   "login",
   "logout",
+  "register",
+  "mkdir",
+  "rmdir",
   "keys",
   "cat",
+];
+
+const keys = [
+  "CTRL+Enter -> new terminal",
+  "CTRL+E -> close last terminal",
+  "CTRL+L -> clear terminal",
 ];
 
 export default async function handleCommand(
@@ -39,20 +48,31 @@ export default async function handleCommand(
     case "cat":
       return cat(args[0], dir);
     case "login":
-      return handleLogin(setLabels, setType);
+      return user ? ["You are already logged in"] : handleLogin(setLabels, setType);
     case "logout":
-      return handleLogout(logout, user);
+      return user ? handleLogout(logout, user) : ["You are not logged in"];
     case "register":
-      return register(setLabels, setType);
+      return user ? ["You are already logged in"] : register(setLabels, setType);
     case "keys":
-      return keys();
+      return keys;
     case "flowetch":
-      return ['🌹'];
+      return ["🌹"];
+    case "create":
+      return create(setLabels, setType);
     case "":
       return [""];
     default:
       return [`${command}: command not found`];
   }
+}
+
+function create(
+  setLabels: (label: string[]) => void,
+  setType: (type: string) => void
+) {
+  setLabels(["Filename: ", "Content: "]);
+  setType("create")
+  return [""];
 }
 
 function register(
@@ -61,7 +81,7 @@ function register(
 ) {
   setLabels(["username: ", "password: "]);
   setType("register");
-  return [""]
+  return [""];
 }
 
 async function rmdir(dirname: string, dir: Directory, user?: User) {
@@ -132,14 +152,6 @@ function whoami(user?: User) {
   return [user ? user.username : "guest"];
 }
 
-function keys() {
-  return [
-    "CTRL+Enter -> new terminal",
-    "CTRL+E -> close last terminal",
-    "CTRL+L -> clear terminal",
-  ];
-}
-
 function ls(dir: Directory) {
   let output: string[] = [];
   dir.directorys?.forEach((subdir) => {
@@ -157,7 +169,7 @@ async function handleLogin(
 ) {
   setLabels(["username: ", "password: "]);
   setType("login");
-  return [""]
+  return [""];
 }
 
 function handleLogout(logout: any, user?: User) {
@@ -206,7 +218,6 @@ function mergeStringsBetweenQuotes(arr: string[]): string[] {
 
   return result;
 }
-
 
 /*
 function flowetch(user?: User) {

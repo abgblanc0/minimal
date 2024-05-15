@@ -35,3 +35,10 @@ export interface File {
     directory_id: number;
 }
 
+export interface NewFile {
+    filename: string;
+    content: string;
+    username: string;
+    directory_id: number;
+}
+

@@ -3,7 +3,7 @@ import { User } from "../models";
 
 // Definimos el tipo para el contexto de autenticación
 interface AuthContextType {
-  user: User | null;
+  user: User | undefined;
   login: (username: string) => void;
   logout: () => void;
 }
@@ -13,7 +13,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Componente proveedor de autenticación
 export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | undefined>();
 
   // Función para iniciar sesión
   const login = (username: string) => {
@@ -22,7 +22,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }
 
   // Función para cerrar sesión
   const logout = () => {
-    setUser(null);
+    setUser(undefined);
   };
 
   // Retornamos el proveedor con el contexto y los valores de estado y funciones de autenticación
