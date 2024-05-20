@@ -15,8 +15,7 @@ export default function App() {
       {terminalArray.map((index) => (
         <AuthProvider key={index}>
           <TerminalProvider>
-            <Terminal
-            />
+            <Terminal/>
           </TerminalProvider>
         </AuthProvider>
       ))}
