@@ -3,7 +3,7 @@ import { useAppContext } from "../contexts/AppProvider";
 import { useTermContext } from "../contexts/TerminalProvider";
 import { useAuth } from "../contexts/AuthProvider";
 import { useCommand } from "./useCommand";
-import { mergeStringsBetweenQuotes } from "../utils/commands";
+import { mergeStringsBetweenQuotes } from "../utils/funcs";
 
 export const useKeyboard = (
   input: string,

@@ -112,7 +112,6 @@ export const useCommand = () => {
     register: () => {
         if(user)
             return ["Already logged in"];
-
         setLabels(["username: ", "password: "]);
         setType("register");
         return [""];

@@ -18,7 +18,7 @@ const useLabels = () => {
         {
           command: type,
           dir: dir,
-          outputs: [response.ok ? "OK" : "NO OK"],
+          outputs: [response.ok ? "OK" : "Invalid username or password"],
           username: "guest",
         },
       ]);
@@ -33,7 +33,7 @@ const useLabels = () => {
           outputs: [
             response.ok
               ? "Register succesfully"
-              : "ERROR: something gone wrong",
+              : "ERROR: username already in use",
           ],
           username: user?.username,
         },
