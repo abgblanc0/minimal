@@ -1,21 +1,17 @@
-import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
+import { KeyboardEvent, useEffect, useRef, useState } from "react";
+import { useTermContext } from "../contexts/TerminalProvider";
+import { useKeyboard } from "../hooks/useKeyboard";
 
-interface Props {
-  labels: string[];
-  setLabels: (asd: string[]) => void;
-  data: FormData;
-}
-export default function Form({labels, setLabels, data }: Props) {
+export default function Form() {
   const [input, setInput] = useState("");
+  const {handleChange} = useKeyboard(input, setInput)
+  const {labels, setLabels, data} = useTermContext();
   const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
   }, []);
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setInput(event.target.value);
-  };
   const handleKeyDown = async (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       data.set(labels[0].trim().slice(0,-1), input);

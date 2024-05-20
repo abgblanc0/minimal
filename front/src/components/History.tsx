@@ -1,11 +1,8 @@
-import { Command } from "../models";
+import { useTermContext } from "../contexts/TerminalProvider";
 import Prefix from "./Prefix";
 
-type HistoryProps = {
-  history: Command[];
-};
-
-export default function History({ history }: HistoryProps) {
+export default function History() {
+  const {history} = useTermContext();
   return (
     <div>
       {history.map((command, index) => (

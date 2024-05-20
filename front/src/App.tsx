@@ -1,9 +1,10 @@
-import { useState } from "react";
 import Terminal from "./components/Terminal";
-import { AuthProvider } from "./components/AuthProvider";
+import { AuthProvider } from "./contexts/AuthProvider";
+import { TerminalProvider } from "./contexts/TerminalProvider";
+import { useAppContext } from "./contexts/AppProvider";
 
 export default function App() {
-  const [terminals, setTerminals] = useState(1);
+  const {terminals} = useAppContext();
   const terminalArray = Array.from({ length: terminals }, (_, index) => index);
   return (
     <div
@@ -13,12 +14,12 @@ export default function App() {
     >
       {terminalArray.map((index) => (
         <AuthProvider>
-          <Terminal
-            //style={index === 0 ? "" : ""}
-            key={index}
-            terminals={terminals}
-            setTerminals={setTerminals}
-          />
+          <TerminalProvider>
+            <Terminal
+              //style={index === 0 ? "" : ""}
+              key={index}
+            />
+          </TerminalProvider>
         </AuthProvider>
       ))}
     </div>
