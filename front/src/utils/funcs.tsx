@@ -1,4 +1,3 @@
-
 export function mergeStringsBetweenQuotes(arr: string[]): string[] {
   const result: string[] = [];
   let currentString: string = "";
@@ -22,6 +21,22 @@ export function mergeStringsBetweenQuotes(arr: string[]): string[] {
 
   return result;
 }
+
+export function parsePermissions(perms: number): string {
+  let result = "";
+  for (let i = 0; i < 3; i++) {
+      result = toChar(perms % 10) + result;
+      perms = Math.floor(perms / 10);
+  }
+  return result;
+}
+
+function toChar(permisos: number): string {
+  return ((permisos & 4) ? 'r' : '-') +
+         ((permisos & 2) ? 'w' : '-') +
+         ((permisos & 1) ? 'x' : '-');
+}
+
 
 /*
 function flowetch(user?: User) {

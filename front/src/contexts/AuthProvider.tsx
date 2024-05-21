@@ -4,7 +4,7 @@ import { User } from "../models";
 // Definimos el tipo para el contexto de autenticación
 interface AuthContextType {
   user: User | undefined;
-  login: (username: string) => void;
+  login: (user: User) => void;
   logout: () => void;
 }
 
@@ -16,8 +16,8 @@ export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }
   const [user, setUser] = useState<User | undefined>();
 
   // Función para iniciar sesión
-  const login = (username: string) => {
-    setUser({ username });
+  const login = (user: User) => {
+    setUser(user);
   };
 
   // Función para cerrar sesión

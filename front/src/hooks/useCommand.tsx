@@ -1,14 +1,14 @@
 import { useAuth } from "../contexts/AuthProvider";
 import { home, useTermContext } from "../contexts/TerminalProvider";
 import { Directory, NewDirectory, File } from "../models";
+import { parsePermissions } from "../utils/funcs";
 
 const keys = [
     "CTRL+Enter -> new terminal",
     "CTRL+E -> close last terminal",
     "CTRL+L -> clear terminal",
-  ];
+];
   
-
 export const useCommand = () => {
   const { user, logout } = useAuth();
   const { dir, setDir, setType, setLabels } = useTermContext();
@@ -19,30 +19,50 @@ export const useCommand = () => {
     ls: () => {
       let output: string[] = [];
       dir.directorys?.forEach((subdir) => {
-        output.push(`drwx-x--x- ${subdir.username} ${subdir.dirname}`);
+        output.push(`d${parsePermissions(subdir.permissions)} ${subdir.username} ${subdir.dirname}`);
       });
       dir.files?.forEach((file) => {
-        output.push(`.rwx-r-xr-- ${file.username} ${file.filename}`);
+        output.push(`.${parsePermissions(file.permissions)} ${file.username} ${file.filename}`);
       });
       return output;
     },
     cd: (args) => {
         let ok: boolean = false;
-        dir.directorys?.forEach((subdir) => {
-          if (subdir.dirname === args[0]) {
-            setDir(subdir);
-            ok = true;
-          }
-        });
-        if (args[0] == "..") {
-          setDir(dir.parent ? dir.parent : home);
-          ok = true;
-        }
         if (!args[0]) {
           setDir(home);
-          ok = true;
+          return [""];
         }
+        if (args[0] == "..") {
+          setDir(dir.parent ? dir.parent : home);
+          return [""];
+        }
+        for(const subdir of dir.directorys? dir.directorys : []){
+          if (subdir.dirname === args[0]) {
+            console.log(Math.floor(subdir.permissions / 10)%10%2 == 1)
+            if(user?.username === "root"){
+              setDir(subdir);
+              return [""]
+            }
+            else if(user?.username === subdir.username && Math.floor(subdir.permissions / 100)%2 == 1) {
+              setDir(subdir);
+              return [""];
+            }
+            else if(user && Math.floor(subdir.permissions / 10)%10%2 == 1) {
+              setDir(subdir);
+              return [""]
+            }
+            else if(!user && Math.floor(subdir.permissions % 10)%2 == 1){
+              setDir(subdir);
+              return [""]
+            }
+            else return ["cd: permission denied: " + subdir.dirname]
+          }
+        }
+
         return [ok ? "" : `cd: no such directory: ${args}`];
+    },
+    umask: () => {
+      return [String(user?.umask).padStart(3, '0')]
     },
     mkdir: async (args) => {
         if(!user)
@@ -65,7 +85,7 @@ export const useCommand = () => {
         let subDir: Directory | undefined;
 
         if(!user)
-            return [`rmdir: Failed to remove '${args[0]}': No such directory`];
+            return [`rmdir: Failed to remove '${args[0]}': Permission denied`];
         for (const subdir of dir.directorys || []) {
           if (args[0] === subdir.dirname) {
             subDir = subdir;

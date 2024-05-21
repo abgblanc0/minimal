@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { NewFile } from "../models";
+import { NewFile, User } from "../models";
 import { fetchFile, fetchLogin, fetchRegister } from "../utils/fetchData";
 import { useTermContext } from "../contexts/TerminalProvider";
 import { useAuth } from "../contexts/AuthProvider";
@@ -10,8 +10,8 @@ const useLabels = () => {
   useEffect(() => {
     const handleLogin = async () => {
       const response = await fetchLogin(data);
-      const user = await response.json();
-      if (response.ok) login(user.username);
+      const user: User = await response.json();
+      if (response.ok) login(user);
 
       setHistory([
         ...history.slice(0, -1),

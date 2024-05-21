@@ -1,6 +1,9 @@
 
 export interface User {
     username: string;
+    password: string;
+    umask: number;
+    root: boolean;
 }
 
 export interface Directory {

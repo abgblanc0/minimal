@@ -3,8 +3,7 @@ import { Directory, File, NewFile } from "../models";
 export async function fetchDir(dir: Directory) {
   const response = await fetch(`http://localhost:8000/directorys/${dir.id}`);
   const data: Directory[] = await response.json();
-  data.forEach((aux) => (aux.parent = dir));
-  dir.directorys = data;
+  return data;
 }
 
 export async function fetchFiles(dir: Directory) {
@@ -12,7 +11,7 @@ export async function fetchFiles(dir: Directory) {
     `http://localhost:8000/directorys/files/${dir.id}`
   );
   const data: File[] = await response.json();
-  dir.files = data;
+  return data;
 }
 
 export async function fetchLogin(data: FormData) {
