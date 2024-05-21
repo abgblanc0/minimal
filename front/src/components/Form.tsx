@@ -20,7 +20,7 @@ export default function Form() {
     }
   };
   return (
-    <div>
+    <div className="flex">
       <label>{labels[0]}</label>
       <input
         onChange={handleChange}

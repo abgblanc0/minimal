@@ -117,7 +117,7 @@ export const useCommand = () => {
         if (uri) {
           const response = await fetch(`http://localhost:8000${uri}`);
           const data: File = await response.json();
-          return [data.filename, data.content, "user: " + data.username];
+          return [data.content];
         }
         return ["[cat error]: no such file"];
     },
