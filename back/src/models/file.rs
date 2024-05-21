@@ -9,6 +9,7 @@ pub struct NewFile<'a> {
     pub filename: &'a str,
     pub content: &'a str,
     pub directory_id: Option<i32>,
+    pub permissions: Option<i32>
 }
 
 #[derive(AsChangeset, Deserialize)]
@@ -17,7 +18,8 @@ pub struct UpdateFile<'a> {
     pub filename: Option<&'a str>,
     pub content: Option<&'a str>,
     pub directory_id: Option<i32>,
-    pub username: Option<&'a str>
+    pub username: Option<&'a str>,
+    pub permissions: Option<i32>
 }
 
 #[derive(Queryable, Debug, Serialize, Identifiable, Deserialize)]
@@ -28,5 +30,6 @@ pub struct File {
     pub filename: String,
     pub content: String,
     pub username: Option<String>,
+    pub permissions: i32,
     pub directory_id: i32
 }

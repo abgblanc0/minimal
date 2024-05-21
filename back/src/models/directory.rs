@@ -7,6 +7,7 @@ use serde::{Deserialize, Serialize};
 pub struct NewDirectory<'a> {
     pub dirname: &'a str,
     pub username: Option<&'a str>,
+    pub permissions: Option<i32>,
     pub parent_id: Option<i32>
 }
 
@@ -18,5 +19,6 @@ pub struct Directory {
     pub ctime: Option<chrono::NaiveDateTime>,
     pub dirname: String,
     pub username: Option<String>,
+    pub permissions: i32,
     pub parent_id: Option<i32>
 }

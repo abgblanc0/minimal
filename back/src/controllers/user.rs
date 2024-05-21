@@ -18,6 +18,11 @@ pub fn check_user(conn: &mut PgConnection, user: AuxUser) -> MyResult<User> {
 pub fn get_user(conn: &mut PgConnection, user_id: i32) -> MyResult<User> {
     users.find(user_id).first(conn)
 }
+
+pub fn get_user_by_name(conn: &mut PgConnection, name: &str) -> MyResult<User> {
+    users.filter(username.eq(name)).get_result(conn)
+}
+
 pub fn get_users(conn: &mut PgConnection) -> MyResult<Vec<User>> {
     users.load(conn)
 }

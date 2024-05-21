@@ -3,9 +3,21 @@ use diesel::{ExpressionMethods, PgConnection, QueryDsl, RunQueryDsl};
 use crate::models::directory::*;
 use crate::schema::directory::dsl::*;
 
+use super::user::get_user_by_name;
+
 type MyResult<T> = Result<T, diesel::result::Error>;
+const DEFAULT_PERMS:i32 = 777;
 
 pub fn create_directory(conn: &mut PgConnection, new_dir: NewDirectory) -> MyResult<Directory> {
+    let mut new_dir = new_dir;
+    let umask = match get_user_by_name(conn, new_dir.username.unwrap_or("")){
+        Ok(usr) => usr.umask,
+        Err(_) => 022
+    };
+    match new_dir.permissions   {
+        Some(_) => (),
+        None => new_dir.permissions = Some(DEFAULT_PERMS - umask),
+    }
     diesel::insert_into(directory)
         .values(&new_dir)
         .get_result(conn)

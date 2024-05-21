@@ -4,19 +4,18 @@ CREATE TABLE directory (
     id SERIAL PRIMARY KEY,
     ctime TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     dirname VARCHAR(255) NOT NULL,
-    username VARCHAR(32) DEFAULT 'root',
+    username VARCHAR(32) DEFAULT 'guest',
+    permissions INT NOT NULL,
     parent_id INT REFERENCES directory(id) ON DELETE CASCADE,
     UNIQUE(dirname, parent_id)
 );
 
-INSERT INTO directory (dirname) 
-VALUES ('/');
-
-INSERT INTO directory (dirname, parent_id) 
-VALUES ('home', 1);
-
-INSERT INTO directory (dirname, parent_id) 
-VALUES ('Public', 1);
+INSERT INTO directory (dirname, username, permissions) 
+VALUES ('/', 'root', 700);
+INSERT INTO directory (dirname, parent_id, username, permissions) 
+VALUES ('home', 1, 'root', 755);
+INSERT INTO directory (dirname, parent_id, username, permissions) 
+VALUES ('Public', 1, 'root', 775);
 
 
 CREATE TABLE file (
@@ -25,6 +24,7 @@ CREATE TABLE file (
     filename VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
     username VARCHAR(32) DEFAULT 'guest',
+    permissions INT NOT NULL,
     directory_id INT REFERENCES directory(id) ON DELETE CASCADE NOT NULL,
     UNIQUE (filename, directory_id)
 );
@@ -37,16 +37,10 @@ DECLARE
     primer_directorio_id INT;
 BEGIN
     -- Insertar un nuevo directorio con el nombre del usuario y su ID como parent_id
-    INSERT INTO directory (dirname, username, parent_id)
-    VALUES (NEW.username, NEW.username, 2)
+    INSERT INTO directory (dirname, username, parent_id, permissions)
+    VALUES (NEW.username, NEW.username, 2, 700)
     RETURNING id INTO primer_directorio_id;
 
-    INSERT INTO directory (dirname, username, parent_id) 
-    VALUES ('MyFiles', NEW.username, primer_directorio_id);
-
-    INSERT INTO directory (dirname, username, parent_id) 
-    VALUES ('Desktop', NEW.username, primer_directorio_id);
-    
     RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;

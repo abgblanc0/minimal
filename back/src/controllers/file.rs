@@ -3,7 +3,11 @@ use diesel::{ExpressionMethods, PgConnection, QueryDsl, RunQueryDsl};
 use crate::models::file::*;
 use crate::schema::file::dsl::*;
 
+use super::user::get_user_by_name;
+
 type MyResult<T> = Result<T, diesel::result::Error>;
+const DEFAULT_PERMS: i32 = 666;
+
 
 pub fn get_files(conn: &mut PgConnection) -> MyResult<Vec<File>> {
     file.load(conn)
@@ -29,6 +33,16 @@ pub fn get_file_by_dir_and_name(conn: &mut PgConnection, dir_id: i32, file_name:
 }
 
 pub fn create_file(conn: &mut PgConnection, new_file: NewFile) -> MyResult<File> {
+    let mut new_file = new_file;
+    let user = get_user_by_name(conn, new_file.username.unwrap_or(""));
+    let umask = match user {
+        Ok(u) => u.umask,
+        Err(_) => 022
+    };
+    match new_file.permissions {
+        Some(_) => (),
+        None => new_file.permissions = Some(DEFAULT_PERMS - umask)
+    }
     diesel::insert_into(file)
         .values(&new_file)
         .get_result(conn)

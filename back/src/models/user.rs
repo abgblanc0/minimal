@@ -7,7 +7,8 @@ use serde::{Deserialize, Serialize};
 pub struct NewUser<'a> {
     pub username: &'a str,
     pub password: &'a str,
-    pub root: Option<bool>
+    pub root: Option<bool>,
+    pub umask: Option<i32>
 }
 
 #[derive(AsChangeset, Deserialize, Debug)]
@@ -24,5 +25,6 @@ pub struct User {
     pub ctime: Option<chrono::NaiveDateTime>,
     pub username: String,
     pub password: String,
-    pub root: bool,
+    pub umask: i32,
+    pub root: bool
 }

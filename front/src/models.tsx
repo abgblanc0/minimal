@@ -8,6 +8,7 @@ export interface Directory {
     ctime: string;
     dirname: string;
     username: string;
+    permissions: number;
     parent?: Directory;
     directorys?: Directory[];
     files?: File[];
@@ -16,6 +17,7 @@ export interface Directory {
 export interface NewDirectory {
     dirname: string;
     username?: string;
+    permissions?: number;
     parent_id: number;
 }
 
@@ -32,6 +34,7 @@ export interface File {
     filename: string;
     content: string;
     username: string;
+    permissions: number;
     directory_id: number;
 }
 
@@ -39,6 +42,7 @@ export interface NewFile {
     filename: string;
     content: string;
     username: string;
+    permissions?: number;
     directory_id: number;
 }
 

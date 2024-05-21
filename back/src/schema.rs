@@ -8,6 +8,7 @@ diesel::table! {
         dirname -> Varchar,
         #[max_length = 32]
         username -> Nullable<Varchar>,
+        permissions -> Int4,
         parent_id -> Nullable<Int4>,
     }
 }
@@ -21,6 +22,7 @@ diesel::table! {
         content -> Text,
         #[max_length = 32]
         username -> Nullable<Varchar>,
+        permissions -> Int4,
         directory_id -> Int4,
     }
 }
@@ -33,6 +35,7 @@ diesel::table! {
         username -> Varchar,
         #[max_length = 64]
         password -> Varchar,
+        umask -> Int4,
         root -> Bool,
     }
 }
