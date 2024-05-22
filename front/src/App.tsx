@@ -3,6 +3,8 @@ import { AuthProvider } from "./contexts/AuthProvider";
 import { TerminalProvider } from "./contexts/TerminalProvider";
 import { useAppContext } from "./contexts/AppProvider";
 
+export const API_URL = import.meta.env.VITE_API_URL;
+
 export default function App() {
   const {terminals} = useAppContext();
   const terminalArray = Array.from({ length: terminals }, (_, index) => index);

@@ -25,6 +25,7 @@ cargo run
 Go to /front
 
 ```bash
+echo VITE_API_URL=http://localhost:8000 > .env
 npm install
 npm run dev
 ```

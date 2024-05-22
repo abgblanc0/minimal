@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { NewFile, User } from "../models";
-import { fetchFile, fetchLogin, fetchRegister } from "../utils/fetchData";
+import { postFile, fetchLogin, fetchRegister } from "../utils/fetchData";
 import { useTermContext } from "../contexts/TerminalProvider";
 import { useAuth } from "../contexts/AuthProvider";
 
@@ -44,10 +44,10 @@ const useLabels = () => {
       let newfile: NewFile = {
         filename: data.get("filename")!.toString(),
         content: data.get("content")!.toString(),
-        username: user!.username,
+        username: user? user.username : "guest",
         directory_id: dir.id,
       };
-      const response = await fetchFile(newfile);
+      const response = await postFile(newfile);
       setHistory([
         ...history.slice(0, -1),
         {
@@ -61,7 +61,7 @@ const useLabels = () => {
 
     if (type === "login" && labels.length === 0) handleLogin();
     if (type === "register" && labels.length === 0) handleRegister();
-    if (type === "create" && labels.length === 0 && user) handleCreate();
+    if (type === "create" && labels.length === 0) handleCreate();
   }, [labels]);
 };
 

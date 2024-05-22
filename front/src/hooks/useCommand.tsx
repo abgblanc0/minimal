@@ -1,6 +1,7 @@
 import { useAuth } from "../contexts/AuthProvider";
 import { home, useTermContext } from "../contexts/TerminalProvider";
 import { Directory, NewDirectory, File } from "../models";
+import { postDir } from "../utils/fetchData";
 import { parsePermissions } from "../utils/funcs";
 
 const keys = [
@@ -72,13 +73,7 @@ export const useCommand = () => {
             parent_id: dir.id,
             username: user ? user.username : "guest",
           };
-          const response = await fetch("http://localhost:8000/directorys", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(new_dir),
-          });
+          const response = await postDir(new_dir);
           return response.ok ? ["OK"] : ["NO OK"];
     },
     rmdir: async (args) => {
