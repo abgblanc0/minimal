@@ -29,10 +29,13 @@ export const useCommand = () => {
       );
     }
   }, [dir.directorys, dir.files]);
-  console.log(pad.current);
+
   const commands: {
     [key: string]: (args: string[]) => Promise<string[]> | string[];
   } = {
+    help: () => {
+      return [Object.keys(commands).join(", ")];
+    },
     whoami: () => {
       return [user ? user.username : "guest"];
     },
@@ -43,7 +46,7 @@ export const useCommand = () => {
           `d${parsePermissions(subdir.permissions)} ${subdir.username.padEnd(
             pad.current,
             " "
-          )} ${subdir.dirname}`
+          )} ${getFormatDate(subdir.ctime)} ${subdir.dirname}`
         );
       });
       dir.files?.forEach((file) => {
@@ -51,7 +54,7 @@ export const useCommand = () => {
           `.${parsePermissions(file.permissions)} ${file.username.padEnd(
             pad.current,
             " "
-          )} ${file.filename}`
+          )} ${getFormatDate(file.ctime)} ${file.filename}`
         );
       });
       return output;
@@ -161,21 +164,18 @@ export const useCommand = () => {
 
       return [
         `${ARTR1}  host    •••   minimal`,
-        `${ARTR2}  user    •••   ${user? user.username : "guest"}`,
+        `${ARTR2}  user    •••   ${user ? user.username : "guest"}`,
         `${ARTR3}  shell   •••   zshxd`,
         `${ARTR4}  wm      •••   hyprlrxd`,
         `${ARTR5}  theme   •••   ORchisss`,
-        `${ARTR6}  pkg     •••   ¿£!·$·???¿?`
-        ];
+        `${ARTR6}  pkg     •••   ¿£!·$·???¿?`,
+      ];
     },
     register: () => {
       if (user) return ["Already logged in"];
       setLabels(["username: ", "password: "]);
       setType("register");
       return [""];
-    },
-    help: () => {
-      return [Object.keys(commands).join(", ")];
     },
     login: () => {
       if (user) return ["Already logged in"];
@@ -195,3 +195,26 @@ export const useCommand = () => {
   };
   return commands;
 };
+
+const months = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
+function getFormatDate(date: string) {
+  const dt = new Date(date);
+  return `${dt.getDate()} ${months[dt.getMonth()]} ${dt
+    .getHours()
+    .toString()
+    .padStart(2, "0")}:${dt.getMinutes().toString().padStart(2, "0")}`;
+}

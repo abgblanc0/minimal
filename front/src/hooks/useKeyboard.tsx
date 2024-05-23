@@ -46,6 +46,7 @@ export const useKeyboard = (
           },
         ]);
         setInput("");
+        historyIndex.current = -1;
       } else if (event.key === "ArrowUp") {
         if (historyIndex.current < history.length - 1) {
           historyIndex.current++;

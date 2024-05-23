@@ -18,6 +18,7 @@ export const home: Directory = {
   dirname: "~",
   id: 1,
   username: "root",
+  permissions: 777,
 };
 
 const TerminalContext = createContext<TerminalContextType | undefined>(
