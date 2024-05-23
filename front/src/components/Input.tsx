@@ -1,13 +1,16 @@
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { useKeyboard } from "../hooks/useKeyboard";
 import { useCommand } from "../hooks/useCommand";
 
-export default function Input() {
+interface Props {
+  inputRef: React.RefObject<HTMLInputElement>;
+}
+
+export default function Input({inputRef}: Props) {
   const [input, setInput] = useState("");
   const commands = useCommand();
   const [suggestion, setSuggestion] = useState("");
   const { handleKeyDown } = useKeyboard(input, setInput);
-  const inputRef = useRef<HTMLInputElement>(null);
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value);
     const match = Object.keys(commands).find((cmd) =>
@@ -15,11 +18,7 @@ export default function Input() {
     );
     setSuggestion(match ? match : "");
   };
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, []);
+
   return (
     <div className="flex-grow flex">
       <input
