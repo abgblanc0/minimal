@@ -113,16 +113,14 @@ export const useCommand = () => {
     rmdir: async (args) => {
       let subDir: Directory | undefined;
 
-      if (!subDir)
-        return [`rmdir: Failed to remove '${args[0]}': No such directory`];
-      if (!user)
-        return [`rmdir: Failed to remove '${args[0]}': Permission denied`];
       for (const subdir of dir.directorys || []) {
         if (args[0] === subdir.dirname) {
           subDir = subdir;
           break;
         }
       }
+      if (!subDir)
+        return [`rmdir: Failed to remove '${args[0]}': No such directory`];
       if (subDir.username !== user?.username && user?.username !== "root")
         return [`rmdir: Failed to remove '${args[0]}': Permission denied`];
       try {
