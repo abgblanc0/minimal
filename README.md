@@ -31,6 +31,5 @@ npm run dev
 ```
 
 ## Screenshots
-
-![image](https://github.com/abgblanc0/minimal/assets/99885502/bb6c48b9-f046-4312-8d83-cf4d9d1f6716)
-![image](https://github.com/abgblanc0/minimal/assets/99885502/10d6126b-6658-454e-8d01-a7d299742eb1)
+![image](https://github.com/abgblanc0/minimal/assets/99885502/bb4d01c2-1966-4eb4-b57d-2d64a720f793)
+![image](https://github.com/abgblanc0/minimal/assets/99885502/a52833f8-ad95-4f2d-8ea4-cd7fc0ec4d4f)
