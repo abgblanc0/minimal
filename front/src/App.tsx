@@ -10,7 +10,7 @@ export default function App() {
   const terminalArray = Array.from({ length: terminals }, (_, index) => index);
   return (
     <div
-      className={`bg-[url('/wallpaper.png')] bg-cover bg-center bg-no-repeat h-screen grid gap-2 place-items-center font-hack text-xl ${
+      className={`bg-[url('/wallpaper.png')] bg-cover bg-center bg-no-repeat h-screen grid gap-2 place-items-center font-Roboto text-xl ${
         terminalArray.length > 1 ? "grid-cols-2" : ""
       }`}
     >

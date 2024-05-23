@@ -2,7 +2,7 @@ import { useTermContext } from "../contexts/TerminalProvider";
 import Prefix from "./Prefix";
 
 export default function History() {
-  const {history} = useTermContext();
+  const { history } = useTermContext();
   return (
     <div>
       {history.map((command, index) => (
@@ -11,12 +11,13 @@ export default function History() {
             <Prefix dir={command.dir} username={command.username} />
             <p className="ml-2">{command.command}</p>
           </div>
-
           <div>
-            {command.outputs.map((out, index) => (
-              <p className="whitespace-pre" key={index}>
-                {out}
-              </p>
+            {command.outputs.map((out, outIndex) => (
+              <div key={outIndex} className="flex">
+                {out.length > 0 && out.split(" ").map((word, wordIndex) => (
+                  <span key={`${outIndex}-${wordIndex}`}>{word}&nbsp;</span>
+                ))}
+              </div>
             ))}
           </div>
         </div>

@@ -35,7 +35,7 @@ export const useKeyboard = (
         const args = mergeStringsBetweenQuotes(argsr);
         const result = commands[command]
           ? await commands[command](args)
-          : [`${command}: command not found`];
+          : command ? [`${command}: command not found`] : [""];
         setHistory([
           ...history,
           {

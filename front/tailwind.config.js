@@ -7,7 +7,9 @@ export default {
   ],
   theme: {
     extend: {
-      fontFamily: {},
+      fontFamily: {
+        Roboto: ["Hack Nerd Font", "mono"]
+      },
       colors: {
         'black': "#01060E",
         'red': "#EA6C73",

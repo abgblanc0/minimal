@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { useAuth } from "../contexts/AuthProvider";
 import { home, useTermContext } from "../contexts/TerminalProvider";
 import { Directory, NewDirectory, File } from "../models";
@@ -9,10 +10,21 @@ const keys = [
     "CTRL+E -> close last terminal",
     "CTRL+L -> clear terminal",
 ];
-  
+
+
 export const useCommand = () => {
   const { user, logout } = useAuth();
   const { dir, setDir, setType, setLabels } = useTermContext();
+  const pad = useRef(0);
+  useEffect(() => {
+    if(dir.directorys){
+      pad.current = Math.max(...dir.directorys.map(sb => sb.username.length), pad.current);
+    }
+    if(dir.files){
+      pad.current = Math.max(...dir.files.map(f => f.username.length), pad.current);
+    }
+  }, [dir.directorys, dir.files])
+  console.log(pad.current)
   const commands: { [key: string]: ((args: string[]) => Promise<string[]> | string[])} = {
     whoami: () => {
       return [user ? user.username : "guest"];
@@ -20,10 +32,10 @@ export const useCommand = () => {
     ls: () => {
       let output: string[] = [];
       dir.directorys?.forEach((subdir) => {
-        output.push(`d${parsePermissions(subdir.permissions)} ${subdir.username} ${subdir.dirname}`);
+        output.push(`d${parsePermissions(subdir.permissions)} ${subdir.username.padEnd(pad.current, " ")} ${subdir.dirname}`);
       });
       dir.files?.forEach((file) => {
-        output.push(`.${parsePermissions(file.permissions)} ${file.username} ${file.filename}`);
+        output.push(`.${parsePermissions(file.permissions)} ${file.username.padEnd(pad.current, " ")} ${file.filename}`);
       });
       return output;
     },
@@ -77,8 +89,10 @@ export const useCommand = () => {
           return response.ok ? ["OK"] : ["NO OK"];
     },
     rmdir: async (args) => {
-        let subDir: Directory | undefined;
-
+      let subDir: Directory | undefined;
+      
+      if (!subDir)
+        return [`rmdir: Failed to remove '${args[0]}': No such directory`];
         if(!user)
             return [`rmdir: Failed to remove '${args[0]}': Permission denied`];
         for (const subdir of dir.directorys || []) {
@@ -87,11 +101,8 @@ export const useCommand = () => {
             break;
           }
         }
-        if (!subDir)
-          return [`rmdir: Failed to remove '${args[0]}': No such directory`];
         if (subDir.username !== user?.username && user?.username !== "root")
           return [`rmdir: Failed to remove '${args[0]}': Permission denied`];
-      
         try {
           const response = await fetch(
             `http://localhost:8000/directorys/${subDir.id}`,
@@ -149,5 +160,3 @@ export const useCommand = () => {
   };
   return commands;
 };
-
-
