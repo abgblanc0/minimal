@@ -8,10 +8,11 @@ export default function Input() {
   const [suggestion, setSuggestion] = useState("");
   const { handleKeyDown } = useKeyboard(input, setInput);
   const inputRef = useRef<HTMLInputElement>(null);
-  const sugRef = useRef<HTMLSpanElement>(null)
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value);
-    const match = Object.keys(commands).find((cmd) => cmd.startsWith(event.target.value));
+    const match = Object.keys(commands).find((cmd) =>
+      cmd.startsWith(event.target.value)
+    );
     setSuggestion(match ? match : "");
   };
   useEffect(() => {
@@ -19,12 +20,6 @@ export default function Input() {
       inputRef.current.focus();
     }
   }, []);
-
-  useEffect(() => {
-    if(sugRef.current)
-      sugRef.current.style.marginLeft = `${input.length}rem`
-  }, [input])
-
   return (
     <div className="flex-grow flex">
       <input
@@ -32,13 +27,21 @@ export default function Input() {
         value={input}
         ref={inputRef}
         onChange={handleChange}
-        className="bg-transparent focus:outline-none flex-grow"
+        className={`bg-transparent text-transparent caret-g ${input == "" ? "caret-white" : "caret-gray-500"} focus:outline-none flex-grow`}
       />
-      {suggestion &&
-        input &&
-        suggestion.startsWith(input) && (
-          <span ref={sugRef} className="absolute text-gray-500">{suggestion.slice(input.length)}</span>
+      <div className="absolute">
+        {input &&
+          input.split("").map((ltr, index) => (
+            <span key={index}>
+              {ltr}
+            </span>
+          ))}
+        {suggestion && input && suggestion.startsWith(input) && (
+          <span className="text-gray-500">
+            {suggestion.slice(input.length)}
+          </span>
         )}
+      </div>
     </div>
   );
 }
