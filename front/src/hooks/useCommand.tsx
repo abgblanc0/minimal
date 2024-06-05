@@ -161,12 +161,12 @@ export const useCommand = () => {
       const ARTR6 = "    \\|/    ";
 
       return [
-        `${ARTR1}  host    •••   minimal`,
-        `${ARTR2}  user    •••   ${user ? user.username : "guest"}`,
-        `${ARTR3}  shell   •••   zshxd`,
-        `${ARTR4}  wm      •••   hyprlrxd`,
-        `${ARTR5}  theme   •••   ORchisss`,
-        `${ARTR6}  pkg     •••   ¿£!·$·???¿?`,
+        `${ARTR1}  host    •••   minimal[[red]]`,
+        `${ARTR2}  user    •••   ${user ? user.username : "guest"}[[green]]`,
+        `${ARTR3}  shell   •••   zshxd[[yellow]]`,
+        `${ARTR4}  wm      •••   hyprlrxd[[blue]]`,
+        `${ARTR5}  theme   •••   ORchisss[[yellow]]`,
+        `${ARTR6}  pkg     •••   ¿£!·$·???¿?[[cyan]]`,
       ];
     },
     register: () => {
